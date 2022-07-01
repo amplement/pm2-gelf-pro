@@ -1,0 +1,28 @@
+{
+  "name": "pm2-gelf-pro",
+  "version": "1.0.0",
+  "description": "PM2 output logs to graylog",
+  "main": "app.js",
+  "dependencies": {
+    "gelf-pro": "^1.3.8",
+    "pm2": "^5.2.0",
+    "pmx": "beta"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keymetrics/pmx.git"
+  },
+  "config": {
+    "conf_var_1": true,
+    "conf_var_2": "myvalue"
+  },
+  "apps": [
+    {
+      "merge_logs": true,
+      "max_memory_restart": "200M",
+      "script": "app.js"
+    }
+  ],
+  "author": "Amplement",
+  "license": "MIT"
+}
