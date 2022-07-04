@@ -12,10 +12,10 @@
     "type": "git",
     "url": "https://github.com/keymetrics/pmx.git"
   },
-  "config": {
-    "conf_var_1": true,
-    "conf_var_2": "myvalue"
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
+  "config": {},
   "apps": [
     {
       "merge_logs": true,
