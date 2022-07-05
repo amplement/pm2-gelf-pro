@@ -41,7 +41,10 @@ if(value !== undefined) {
     config.adapterOptions.cert = cert;
 } else if (config.adapterName === 'tcp-tls'){
     config.adapterName = 'tcp';
-    console.log('pm2-gelf-pro connector: "certpath" is missing. swith to "tcp"');
+    if(_env['gelf_adapterOptions_port'] === undefined) {
+        config.adapterOptions.port = 2202;
+    }
+    console.log(`pm2-gelf-pro connector: "certpath" is missing. swith to "${config.adapterName}:${config.adapterOptions.port}`);
 }
 
 gelf.setConfig(config);
