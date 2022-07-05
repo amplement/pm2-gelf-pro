@@ -12,9 +12,6 @@
     "type": "git",
     "url": "https://github.com/amplement/pm2-gelf-pro.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "config": {},
   "apps": [
     {
