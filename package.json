@@ -1,5 +1,5 @@
 {
-  "name": "@amplement/pm2-gelf-pro",
+  "name": "pm2-gelf-pro",
   "version": "1.0.2",
   "description": "PM2 output logs to graylog",
   "main": "app.js",
