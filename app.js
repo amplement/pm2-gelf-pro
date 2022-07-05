@@ -30,6 +30,7 @@ value = _env['gelf_fields'];
 if(value !== undefined) {
     try {
         config.fields = JSON.parse(value);
+        console.log(`pm2-gelf-pro connector: "fields" set to ${value}`);
     } catch(err){
         console.error(err);
     }
@@ -38,6 +39,9 @@ value = _env['gelf_adapterOptions_certpath'];
 if(value !== undefined) {
     const cert = fs.readFileSync(value);
     config.adapterOptions.cert = cert;
+} else if (config.adapterName === 'tcp-tls'){
+    config.adapterName = 'tcp';
+    console.log('pm2-gelf-pro connector: "certpath" is missing. swith to "tcp"');
 }
 
 gelf.setConfig(config);
