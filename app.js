@@ -51,14 +51,14 @@ if (value !== undefined) {
 
 gelf.setConfig(config);
 
-pm2.Client.launchBus(function (err, bus) {
+pm2.Client.launchBus((err, bus) => {
     if (err) return console.error('pm2-gelf-pro:', err);
 
     console.log(
         `pm2-gelf-pro connector: Bus connected, sending logs to ${config.adapterOptions.host}:${config.adapterOptions.port} over ${config.adapterName}`
     );
 
-    bus.on('log:out', function (log) {
+    bus.on('log:out', (log) => {
         if (log.process.name !== 'pm2-gelf-pro') {
             const { head, level, type, subType, body } = parseLogHead(log.data);
             gelf[level](log.data, {
@@ -70,17 +70,18 @@ pm2.Client.launchBus(function (err, bus) {
         }
     });
 
-    bus.on('log:err', function (log) {
+    bus.on('log:err', (log) => {
         if (log.process.name !== 'pm2-gelf-pro') {
-            gelf.error(log.data, { application_name: log.process.name });
+            const { type, subType } = parseLogHead(log.data);
+            gelf.error(log.data, { type, subType, ...computeBaseExtras(log) });
         }
     });
 
-    bus.on('reconnect attempt', function () {
+    bus.on('reconnect attempt', () => {
         console.log('pm2-gelf-pro connector: Bus reconnecting');
     });
 
-    bus.on('close', function () {
+    bus.on('close', () => {
         console.log('pm2-gelf-pro connector: Bus closed');
         pm2.disconnectBus();
     });
