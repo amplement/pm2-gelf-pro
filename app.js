@@ -1,4 +1,4 @@
-'use strict';
+/* eslint-disable no-console */
 const fs = require('fs');
 const pm2 = require('pm2');
 const pmx = require('pmx');
@@ -14,19 +14,19 @@ const config = {
         port: 12202
     }
 };
-let value = _env['gelf_adapterOptions_host'];
+let value = _env.gelf_adapterOptions_host;
 if (value !== undefined) {
     config.adapterOptions.host = value;
 }
-value = _env['gelf_adapterOptions_port'];
+value = _env.gelf_adapterOptions_port;
 if (value !== undefined) {
     config.adapterOptions.port = value;
 }
-value = _env['gelf_adapterName'];
+value = _env.gelf_adapterName;
 if (value !== undefined) {
     config.adapterName = value;
 }
-value = _env['gelf_fields'];
+value = _env.gelf_fields;
 if (value !== undefined) {
     try {
         config.fields = JSON.parse(value);
@@ -35,13 +35,13 @@ if (value !== undefined) {
         console.error(err);
     }
 }
-value = _env['gelf_adapterOptions_certpath'];
+value = _env.gelf_adapterOptions_certpath;
 if (value !== undefined) {
     const cert = fs.readFileSync(value);
     config.adapterOptions.cert = cert;
 } else if (config.adapterName === 'tcp-tls') {
     config.adapterName = 'tcp';
-    if (_env['gelf_adapterOptions_port'] === undefined) {
+    if (_env.gelf_adapterOptions_port === undefined) {
         config.adapterOptions.port = 2202;
     }
     console.log(

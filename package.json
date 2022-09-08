@@ -5,8 +5,8 @@
     "main": "app.js",
     "scripts": {
         "eslint": "eslint --max-warnings 0 --ext .js",
-        "eslint:check": "eslint src",
-        "eslint:fix": "eslint --fix src",
+        "eslint:check": "eslint .",
+        "eslint:fix": "eslint --fix .",
         "prettier:check": "prettier --list-different .",
         "prettier:fix": "prettier --write ."
     },

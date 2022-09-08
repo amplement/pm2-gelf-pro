@@ -5,7 +5,7 @@ function parser(log) {
     return {
         ip: ip.split('').slice(4).join(''),
         country,
-        httpVerb: verb.replace(':', ''),
+        httpVerb: httpVerb.replace(':', ''),
         url,
         responseCode,
         executionTime: parseFloat(executionTime.replace('rt=', '')),
