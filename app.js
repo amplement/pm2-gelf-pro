@@ -60,7 +60,6 @@ pm2.Client.launchBus(function (err, bus) {
 
     bus.on('log:out', function (log) {
         if (log.process.name !== 'pm2-gelf-pro') {
-            // console.log(log.process.name, log.data);
             const { head, level, type, subType, body } = parseLogHead(log.data);
             gelf[level](log.data, {
                 type,
@@ -73,8 +72,7 @@ pm2.Client.launchBus(function (err, bus) {
 
     bus.on('log:err', function (log) {
         if (log.process.name !== 'pm2-gelf-pro') {
-            // console.error(log.process.name, log.data);
-            gelf.log(log.data, { application_name: log.process.name });
+            gelf.error(log.data, { application_name: log.process.name });
         }
     });
 

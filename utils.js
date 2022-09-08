@@ -6,4 +6,5 @@ function computeBaseExtras(log) {
         applicationName: log.process.name
     };
 }
+
 module.exports = { computeBaseExtras };
