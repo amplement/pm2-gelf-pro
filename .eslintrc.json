@@ -1,0 +1,36 @@
+{
+    "env": {
+        "es6": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": ["standard", "eslint:recommended", "plugin:prettier/recommended"],
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": ["babel", "import", "prettier"],
+    "settings": {
+        "import/resolver": {
+            "babel-module": {}
+        }
+    },
+    "rules": {
+        "no-console": "error",
+        "valid-jsdoc": [
+            "error",
+            {
+                "prefer": {
+                    "return": "returns"
+                },
+                "preferType": {
+                    "object": "Object"
+                },
+                "requireReturn": false,
+                "requireReturnType": false,
+                "requireReturnDescription": false,
+                "requireParamDescription": false
+            }
+        ]
+    }
+}

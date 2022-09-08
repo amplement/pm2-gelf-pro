@@ -1,0 +1,10 @@
+upload-doc.js
+node_modules/**
+android/**
+ios/**
+__tests__/**
+.prettierrc
+shim.js
+jsconfig.json
+dist/**
+readme.md

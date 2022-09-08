@@ -1,0 +1,76 @@
+version: 2
+
+node-build: &node-build
+  working_directory:  ~/repo
+  docker:
+    - image: cimg/node:16.14.0
+
+attach_root_workspace: &attach_root_workspace
+  attach_workspace:
+    at: .
+
+jobs:
+
+  fetch_dependencies:
+    <<: *node-build
+
+    steps:
+      - checkout
+
+      - *attach_root_workspace
+
+      - restore_cache:
+          name: Restore node_modules cached
+          keys:
+            - deps-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Login into Github package registry
+          command: test -d node_modules || npx -p npm-cli-login npm-cli-login
+
+      - run:
+          name: Install dependencies
+          command: test -d node_modules || npm ci
+
+      - save_cache:
+          name: Cache node_modules
+          key: deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+      - persist_to_workspace:
+          root:  .
+          paths:
+            - .
+
+  check_lint:
+    <<: *node-build
+    steps:
+      - *attach_root_workspace
+      - run:
+          name: Linting src
+          command: npm run eslint:check
+
+  check_prettier:
+    <<: *node-build
+    steps:
+      - *attach_root_workspace
+      - run:
+          name: Check prettier
+          command: npm run prettier:check
+
+workflows:
+  version: 2
+  complete-workflow:
+    jobs:
+      - fetch_dependencies:
+          context: org-global
+          filters:
+            tags:
+              only: /^v?[0-9]+(\.[0-9]+)*/
+      - check_lint:
+          requires:
+            - fetch_dependencies
+      - check_prettier:
+          requires:
+            - fetch_dependencies
