@@ -1,4 +1,4 @@
-const httpParser = require('./http');
+const { parser: httpParser } = require('./http');
 
 function parseLogHead(line) {
     const [head, ...body] = line.trim().split(' ');

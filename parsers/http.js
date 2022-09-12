@@ -1,23 +1,31 @@
+const UUID_PATTERN = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+function isString(value) {
+    return value && typeof value === 'string';
+}
+
 function getVersion(urlPart) {
-    if (!!urlPart.match(/v[0-9]{1,3}/g)) {
+    if (isString(urlPart) && !!urlPart.match(/v[0-9]{1,3}/g)) {
         return parseInt(urlPart.replace('v', ''), 10);
     }
     return 1;
 }
 
 function isUuid(urlPart) {
-    return !!urlPart.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/);
+    return !!(isString(urlPart) && urlPart.match(UUID_PATTERN));
 }
 
 function extractQueryParams(url) {
     const [baseUrl, queryParams] = url.split('?');
-    return { baseUrl, queryParams };
+    return { baseUrl, ...(queryParams ? { queryParams } : {}) };
 }
 
 function extractRequestGroup(url) {
     const { baseUrl, queryParams } = extractQueryParams(url);
-    const group = { queryParams, admin: false };
-    const splittedUrl = baseUrl.split('/');
+    const group = { ...(queryParams ? { queryParams } : {}), admin: false };
+    const splittedUrl = baseUrl.trim().split('/');
+    if (splittedUrl[0] === '') {
+        splittedUrl.shift();
+    }
     group.version = getVersion(splittedUrl[0]);
     if (group.version !== 1) {
         splittedUrl.shift();
@@ -32,6 +40,11 @@ function extractRequestGroup(url) {
     }
 
     if (!splittedUrl[0]) {
+        return group;
+    }
+
+    if (!group._entity) {
+        group.rest = splittedUrl.join('/');
         return group;
     }
 
@@ -72,4 +85,4 @@ function parser(log) {
     };
 }
 
-module.exports = parser;
+module.exports = { getVersion, isUuid, extractQueryParams, extractRequestGroup, parser };
