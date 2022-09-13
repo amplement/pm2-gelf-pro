@@ -51,6 +51,14 @@ jobs:
           name: Linting src
           command: npm run eslint:check
 
+  check_test:
+    <<: *node-build
+    steps:
+      - *attach_root_workspace
+      - run:
+          name: Check test
+          command: npm run test
+
   check_prettier:
     <<: *node-build
     steps:
@@ -72,5 +80,8 @@ workflows:
           requires:
             - fetch_dependencies
       - check_prettier:
+          requires:
+            - fetch_dependencies
+      -check_test:
           requires:
             - fetch_dependencies
