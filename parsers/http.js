@@ -68,12 +68,52 @@ function extractRequestGroup(url) {
     return group;
 }
 
+function extractAndProcessContext(log) {
+    const matchedContext = log.match(/({.*}$)/);
+    if (matchedContext && matchedContext.length > 0) {
+        return {
+            context: matchedContext[0].trim(), // TODO: parse this
+            log: log.replace(matchedContext[0], '').trim()
+        };
+    }
+    return { log };
+}
+
+function parseLogQueue(log) {
+    const parsed = {};
+    let processedLog = log.trim();
+    const matchClientId = processedLog.match(
+        /([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$)/
+    );
+    if (matchClientId && matchClientId.length > 0) {
+        parsed._client = matchClientId[0];
+        processedLog = processedLog.replace(matchClientId[0], '').trim();
+    }
+    parsed.userAgent = processedLog;
+    return parsed;
+}
+
+function cleanIp(ip) {
+    const splittedIp = ip.split('');
+    if (
+        !splittedIp
+            .slice(0, 4)
+            .join('')
+            .match(/^[0-9a-f.:]{4}$/)
+    ) {
+        return splittedIp.slice(4).join('');
+    }
+    return ip;
+}
+
 function parser(log) {
-    const [ip, , country, , httpVerb, url, responseCode, executionTime, userAgent, _client] = log
+    const { context, log: logWithoutContext } = extractAndProcessContext(log);
+    const [ip, , country, , httpVerb, url, responseCode, executionTime, ...rest] = logWithoutContext
         .trim()
         .split(' ');
+    const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
-        ip: ip.split('').slice(4).join(''),
+        ip: cleanIp(ip),
         country,
         httpVerb: httpVerb.replace(':', ''),
         url,
@@ -81,8 +121,17 @@ function parser(log) {
         executionTime: parseFloat(executionTime.replace('rt=', '')),
         userAgent,
         _client,
-        ...extractRequestGroup(url)
+        ...extractRequestGroup(url),
+        ...(context ? { context } : {})
     };
 }
 
-module.exports = { getVersion, isUuid, extractQueryParams, extractRequestGroup, parser };
+module.exports = {
+    extractAndProcessContext,
+    parseLogQueue,
+    getVersion,
+    isUuid,
+    extractQueryParams,
+    extractRequestGroup,
+    parser
+};
