@@ -82,6 +82,6 @@ workflows:
       - check_prettier:
           requires:
             - fetch_dependencies
-      -check_test:
+      - check_test:
           requires:
             - fetch_dependencies
