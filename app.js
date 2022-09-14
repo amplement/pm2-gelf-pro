@@ -57,10 +57,15 @@ pm2.Client.launchBus((err, bus) => {
         `pm2-gelf-pro connector: Bus connected, sending logs to ${config.adapterOptions.host}:${config.adapterOptions.port} over ${config.adapterName}`
     );
 
+    function removeColorCharacters(log) {
+        return log.replace(/\x1b/g, '').replace(/\[[0-9;]{1,11}m/g, '');
+    }
+
     function handleLog(log, isError = false) {
         if (log.process.name !== 'pm2-gelf-pro') {
-            const { logLevel, additionalData } = parseLog(log, isError);
-            gelf[logLevel](log.data, additionalData);
+            const cleanedData = removeColorCharacters(log.data);
+            const { logLevel, additionalData } = parseLog(log, cleanedData, isError);
+            gelf[logLevel](cleanedData, additionalData);
         }
     }
 

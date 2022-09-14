@@ -34,7 +34,7 @@ function extractRequestGroup(url) {
         group.admin = true;
         splittedUrl.shift();
     }
-    group.type = splittedUrl.shift();
+    group.resourceType = splittedUrl.shift();
     if (splittedUrl[0] && isUuid(splittedUrl[0])) {
         group._entity = splittedUrl.shift();
     }
@@ -49,7 +49,7 @@ function extractRequestGroup(url) {
     }
 
     if (!isUuid(splittedUrl[0])) {
-        group.subType = splittedUrl.shift();
+        group.subResourcesType = splittedUrl.shift();
     }
 
     if (!splittedUrl[0]) {
@@ -113,6 +113,7 @@ function parser(log) {
         .split(' ');
     const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
+	logType: 'http',
         ip: cleanIp(ip),
         country,
         httpVerb: httpVerb.replace(':', ''),

@@ -8,11 +8,11 @@ function computeBaseExtras(log) {
     };
 }
 
-function parse(log, isError = false) {
+function parse(log, message, isError = false) {
     let additionalData = {};
     let logLevel = 'info';
     try {
-        const { head, level, type, subType, body } = parseHead(log.data);
+        const { head, level, type, subType, body } = parseHead(message);
         logLevel = level;
         additionalData = {
             type,
