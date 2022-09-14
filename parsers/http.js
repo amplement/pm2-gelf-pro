@@ -49,7 +49,7 @@ function extractRequestGroup(url) {
     }
 
     if (!isUuid(splittedUrl[0])) {
-        group.subResourcesType = splittedUrl.shift();
+        group.subResourceType = splittedUrl.shift();
     }
 
     if (!splittedUrl[0]) {
