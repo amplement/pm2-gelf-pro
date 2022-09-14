@@ -1,6 +1,33 @@
+const os = require('os');
 const { parser: httpParser } = require('./http');
 
-function parseLogHead(line) {
+function computeBaseExtras(log) {
+    return {
+        host: os.hostname(),
+        applicationName: log.process.name
+    };
+}
+
+function parse(log, isError = false) {
+    let additionalData = {};
+    let logLevel = 'info';
+    try {
+        const { head, level, type, subType, body } = parseHead(log.data);
+        logLevel = level;
+        additionalData = {
+            type,
+            subType,
+            ...computeBaseExtras(log),
+            ...parseBody(head, body)
+        };
+    } catch (e) {
+        additionalData.processingError = true;
+        additionalData.errorDetails = e;
+    }
+    return { logLevel: isError ? 'error' : logLevel, additionalData };
+}
+
+function parseHead(line) {
     const [head, ...body] = line.trim().split(' ');
     const [service, level, type, subType, ...rest] = head.split(':');
     return {
@@ -14,7 +41,7 @@ function parseLogHead(line) {
     };
 }
 
-function parseLog(head, body) {
+function parseBody(head, body) {
     if (head.endsWith(':http') && body.match(/(POST|GET|PATCH|DELETE|HEAD|PUT):/)) {
         return httpParser(body);
     } else {
@@ -39,7 +66,5 @@ function convertLevel(level) {
             return 'notice';
     }
 }
-module.exports = {
-    parseLog,
-    parseLogHead
-};
+
+module.exports = parse;

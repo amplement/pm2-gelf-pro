@@ -9,6 +9,7 @@ const {
 } = require('./http');
 
 describe('http log parser', () => {
+
     describe('getVersion', () => {
         it('should extract correctly version', () => {
             expect(getVersion('v1')).toBe(1);
@@ -26,6 +27,7 @@ describe('http log parser', () => {
             expect(getVersion([])).toBe(1);
         });
     });
+
     describe('isUuid', () => {
         it('should recognize uuid', () => {
             expect(isUuid('00000000-0000-0000-0000-000000000000')).toBe(true);
@@ -38,6 +40,7 @@ describe('http log parser', () => {
             expect(isUuid('')).toBe(false);
         });
     });
+
     describe('extractQueryParams', () => {
         it('should extract query params', () => {
             expect(extractQueryParams('http://ok.com?foo=bar&baz=gro')).toStrictEqual({
@@ -50,6 +53,7 @@ describe('http log parser', () => {
             expect(extractQueryParams('a?b')).toStrictEqual({ baseUrl: 'a', queryParams: 'b' });
         });
     });
+
     describe('extractRequestGroup', () => {
         it('should split url into searchable entities', () => {
             expect(extractRequestGroup('/users/me')).toStrictEqual({
@@ -113,6 +117,7 @@ describe('http log parser', () => {
             });
         });
     });
+
     describe('extractAndProcessContext', () => {
         it('should extract the context of an http request', () => {
             expect(extractAndProcessContext('a b c {d e f}')).toStrictEqual({
@@ -136,6 +141,7 @@ describe('http log parser', () => {
             ).toStrictEqual({ userAgent: 'bla bla bal 00000000-0000-0000-0000-000000000000 blop' });
         });
     });
+
     describe('parser', () => {
         it('should read and format an http log', () => {
             const log =

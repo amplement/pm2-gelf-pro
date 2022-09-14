@@ -3,8 +3,7 @@ const fs = require('fs');
 const pm2 = require('pm2');
 const pmx = require('pmx');
 const gelf = require('gelf-pro');
-const { parseLogHead, parseLog } = require('./parsers');
-const { computeBaseExtras } = require('./utils');
+const parseLog = require('./parsers');
 
 const _env = pmx.initModule();
 const config = {
@@ -58,23 +57,19 @@ pm2.Client.launchBus((err, bus) => {
         `pm2-gelf-pro connector: Bus connected, sending logs to ${config.adapterOptions.host}:${config.adapterOptions.port} over ${config.adapterName}`
     );
 
-    bus.on('log:out', (log) => {
+    function handleLog(log, isError = false) {
         if (log.process.name !== 'pm2-gelf-pro') {
-            const { head, level, type, subType, body } = parseLogHead(log.data);
-            gelf[level](log.data, {
-                type,
-                subType,
-                ...computeBaseExtras(log),
-                ...parseLog(head, body)
-            });
+            const { logLevel, additionalData } = parseLog(log, isError);
+            gelf[logLevel](log.data, additionalData);
         }
+    }
+
+    bus.on('log:out', (log) => {
+        handleLog(log);
     });
 
     bus.on('log:err', (log) => {
-        if (log.process.name !== 'pm2-gelf-pro') {
-            const { type, subType } = parseLogHead(log.data);
-            gelf.error(log.data, { type, subType, ...computeBaseExtras(log) });
-        }
+        handleLog(log, true);
     });
 
     bus.on('reconnect attempt', () => {
