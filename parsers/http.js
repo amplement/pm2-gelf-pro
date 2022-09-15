@@ -113,7 +113,7 @@ function parser(log) {
         .split(' ');
     const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
-	logType: 'http',
+        logType: 'http',
         ip: cleanIp(ip),
         country,
         httpVerb: httpVerb.replace(':', ''),

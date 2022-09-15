@@ -4,6 +4,7 @@ const pm2 = require('pm2');
 const pmx = require('pmx');
 const gelf = require('gelf-pro');
 const parseLog = require('./parsers');
+const { removeColorCharacters } = require('./utils');
 
 const _env = pmx.initModule();
 const config = {
@@ -36,8 +37,7 @@ if (value !== undefined) {
 }
 value = _env.gelf_adapterOptions_certpath;
 if (value !== undefined) {
-    const cert = fs.readFileSync(value);
-    config.adapterOptions.cert = cert;
+    config.adapterOptions.cert = fs.readFileSync(value);
 } else if (config.adapterName === 'tcp-tls') {
     config.adapterName = 'tcp';
     if (_env.gelf_adapterOptions_port === undefined) {
@@ -56,10 +56,6 @@ pm2.Client.launchBus((err, bus) => {
     console.log(
         `pm2-gelf-pro connector: Bus connected, sending logs to ${config.adapterOptions.host}:${config.adapterOptions.port} over ${config.adapterName}`
     );
-
-    function removeColorCharacters(log) {
-        return log.replace(/\x1b/g, '').replace(/\[[0-9;]{1,11}m/g, '');
-    }
 
     function handleLog(log, isError = false) {
         if (log.process.name !== 'pm2-gelf-pro') {
