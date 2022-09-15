@@ -1,5 +1,6 @@
 const os = require('os');
 const { parser: httpParser } = require('./http');
+const { parser: roomParser, isCompatibleLog: isRoomCompatibleLog } = require('./room');
 
 function computeBaseExtras(log) {
     return {
@@ -44,9 +45,10 @@ function parseHead(line) {
 function parseBody(head, body) {
     if (head.endsWith(':http') && body.match(/(POST|GET|PATCH|DELETE|HEAD|PUT):/)) {
         return httpParser(body);
-    } else {
-        return {};
+    } else if (isRoomCompatibleLog(body, head)) {
+        return roomParser(body, head);
     }
+    return {};
 }
 
 function convertLevel(level) {

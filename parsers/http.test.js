@@ -9,7 +9,6 @@ const {
 } = require('./http');
 
 describe('http log parser', () => {
-
     describe('getVersion', () => {
         it('should extract correctly version', () => {
             expect(getVersion('v1')).toBe(1);
