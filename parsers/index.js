@@ -69,4 +69,8 @@ function convertLevel(level) {
     }
 }
 
-module.exports = parse;
+module.exports = {
+    parseHead,
+    parse,
+    default: parse
+};
