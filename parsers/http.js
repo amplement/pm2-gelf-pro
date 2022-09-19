@@ -1,4 +1,14 @@
 const UUID_PATTERN = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+
+function isParseable(log, head) {
+    return !!(
+        head &&
+        head.endsWith(':http') &&
+        log &&
+        log.match(/(POST|GET|PATCH|DELETE|HEAD|PUT):/)
+    );
+}
+
 function isString(value) {
     return value && typeof value === 'string';
 }
@@ -34,7 +44,7 @@ function extractRequestGroup(url) {
         group.admin = true;
         splittedUrl.shift();
     }
-    group.resourceType = splittedUrl.shift();
+    group.entityType = splittedUrl.shift();
     if (splittedUrl[0] && isUuid(splittedUrl[0])) {
         group._entity = splittedUrl.shift();
     }
@@ -49,7 +59,7 @@ function extractRequestGroup(url) {
     }
 
     if (!isUuid(splittedUrl[0])) {
-        group.subResourceType = splittedUrl.shift();
+        group.subEntityType = splittedUrl.shift();
     }
 
     if (!splittedUrl[0]) {
@@ -72,7 +82,7 @@ function extractAndProcessContext(log) {
     const matchedContext = log.match(/({.*}$)/);
     if (matchedContext && matchedContext.length > 0) {
         return {
-            context: matchedContext[0].trim(), // TODO: parse this
+            context: matchedContext[0].trim(),
             log: log.replace(matchedContext[0], '').trim()
         };
     }
@@ -113,7 +123,7 @@ function parser(log) {
         .split(' ');
     const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
-        logType: 'http',
+        parser: 'http',
         ip: cleanIp(ip),
         country,
         httpVerb: httpVerb.replace(':', ''),
@@ -128,6 +138,7 @@ function parser(log) {
 }
 
 module.exports = {
+    isParseable,
     extractAndProcessContext,
     parseLogQueue,
     getVersion,

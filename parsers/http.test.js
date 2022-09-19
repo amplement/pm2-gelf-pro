@@ -58,7 +58,7 @@ describe('http log parser', () => {
             expect(extractRequestGroup('/users/me')).toStrictEqual({
                 version: 1,
                 admin: false,
-                type: 'users',
+                entityType: 'users',
                 rest: 'me'
             });
             expect(
@@ -68,7 +68,7 @@ describe('http log parser', () => {
             ).toStrictEqual({
                 version: 1,
                 admin: true,
-                type: 'monitor',
+                entityType: 'monitor',
                 rest: 'sockets/sparks/00000000-0000-0000-0000-000000000000'
             });
             expect(
@@ -78,9 +78,9 @@ describe('http log parser', () => {
             ).toStrictEqual({
                 version: 1,
                 admin: true,
-                type: 'users',
+                entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000',
-                subType: 'push-notification',
+                subEntityType: 'push-notification',
                 rest: 'ping'
             });
             expect(
@@ -88,7 +88,7 @@ describe('http log parser', () => {
             ).toStrictEqual({
                 version: 1,
                 admin: false,
-                type: 'users',
+                entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000'
             });
             expect(
@@ -98,9 +98,9 @@ describe('http log parser', () => {
             ).toStrictEqual({
                 version: 5,
                 admin: false,
-                type: 'feeds',
+                entityType: 'feeds',
                 _entity: '00000000-0000-0000-0000-000000000000',
-                subType: 'members',
+                subEntityType: 'members',
                 _subEntity: '11111111-1111-1111-1111-111111111111'
             });
             expect(
@@ -110,9 +110,9 @@ describe('http log parser', () => {
             ).toStrictEqual({
                 version: 5,
                 admin: false,
-                type: 'users',
+                entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000',
-                subType: 'acknowledgements'
+                subEntityType: 'acknowledgements'
             });
         });
     });
@@ -146,6 +146,7 @@ describe('http log parser', () => {
             const log =
                 "89.101.10.145 [2022-09-12T14:37:31.994Z] - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 { _user: '2410a410-6ae7-4da5-b70e-08f951d268d9', _client: undefined, _company: '732cdb1a-23a1-4829-824f-02289cecdefd', _spark: undefined, _entity: undefined, id: '2410a410-6ae7-4da5-b70e-08f951d268d9', isContext: true }";
             expect(parser(log)).toStrictEqual({
+                parser: 'http',
                 ip: '89.101.10.145',
                 country: '-',
                 httpVerb: 'POST',
@@ -157,9 +158,9 @@ describe('http log parser', () => {
                 _client: 'e0aa11f3-bc60-4363-a15c-bf185435e2e9',
                 admin: false,
                 version: 1,
-                type: 'feed',
+                entityType: 'feed',
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
-                subType: 'acknowledgements',
+                subEntityType: 'acknowledgements',
                 context:
                     "{ _user: '2410a410-6ae7-4da5-b70e-08f951d268d9', _client: undefined, _company: '732cdb1a-23a1-4829-824f-02289cecdefd', _spark: undefined, _entity: undefined, id: '2410a410-6ae7-4da5-b70e-08f951d268d9', isContext: true }"
             });

@@ -1,6 +1,6 @@
 const os = require('os');
-const { parser: httpParser } = require('./http');
-const { parser: roomParser, isCompatibleLog: isRoomCompatibleLog } = require('./room');
+const { parser: httpParser, isParseable: isParseableHttp } = require('./http');
+const { parser: roomParser, isParseable: isParseableRoom } = require('./room');
 
 function computeBaseExtras(log) {
     return {
@@ -23,7 +23,7 @@ function parse(log, message, isError = false) {
         };
     } catch (e) {
         additionalData.processingError = true;
-        additionalData.errorDetails = e;
+        additionalData.errorDetails = e.message;
     }
     return { logLevel: isError ? 'error' : logLevel, additionalData };
 }
@@ -42,11 +42,11 @@ function parseHead(line) {
     };
 }
 
-function parseBody(head, body) {
-    if (head.endsWith(':http') && body.match(/(POST|GET|PATCH|DELETE|HEAD|PUT):/)) {
-        return httpParser(body);
-    } else if (isRoomCompatibleLog(body, head)) {
-        return roomParser(body, head);
+function parseBody(head, log) {
+    if (isParseableHttp(log, head)) {
+        return httpParser(log);
+    } else if (isParseableRoom(head)) {
+        return roomParser(log, head);
     }
     return {};
 }
@@ -65,7 +65,7 @@ function convertLevel(level) {
         case 'error':
             return 'error';
         default:
-            return 'notice';
+            return 'info';
     }
 }
 
