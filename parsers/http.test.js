@@ -49,7 +49,14 @@ describe('http log parser', () => {
             expect(extractQueryParams('http://ok.com&foo=bar&baz=gro')).toStrictEqual({
                 baseUrl: 'http://ok.com&foo=bar&baz=gro'
             });
-            expect(extractQueryParams('a?b')).toStrictEqual({ baseUrl: 'a', queryParams: 'b' });
+            expect(extractQueryParams('a?b')).toStrictEqual({
+                baseUrl: 'a',
+                queryParams: 'b'
+            });
+            expect(extractQueryParams('/a?b')).toStrictEqual({
+                baseUrl: 'a',
+                queryParams: 'b'
+            });
         });
     });
 
@@ -59,7 +66,8 @@ describe('http log parser', () => {
                 version: 1,
                 admin: false,
                 entityType: 'users',
-                rest: 'me'
+                rest: 'me',
+                path: 'users/me'
             });
             expect(
                 extractRequestGroup(
@@ -69,7 +77,8 @@ describe('http log parser', () => {
                 version: 1,
                 admin: true,
                 entityType: 'monitor',
-                rest: 'sockets/sparks/00000000-0000-0000-0000-000000000000'
+                rest: 'sockets/sparks/00000000-0000-0000-0000-000000000000',
+                path: 'admin/monitor/sockets/sparks/:_id'
             });
             expect(
                 extractRequestGroup(
@@ -81,7 +90,8 @@ describe('http log parser', () => {
                 entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000',
                 subEntityType: 'push-notification',
-                rest: 'ping'
+                rest: 'ping',
+                path: 'admin/users/:_id/push-notification/ping'
             });
             expect(
                 extractRequestGroup('/users/00000000-0000-0000-0000-000000000000')
@@ -89,7 +99,8 @@ describe('http log parser', () => {
                 version: 1,
                 admin: false,
                 entityType: 'users',
-                _entity: '00000000-0000-0000-0000-000000000000'
+                _entity: '00000000-0000-0000-0000-000000000000',
+                path: 'users/:_id'
             });
             expect(
                 extractRequestGroup(
@@ -101,7 +112,8 @@ describe('http log parser', () => {
                 entityType: 'feeds',
                 _entity: '00000000-0000-0000-0000-000000000000',
                 subEntityType: 'members',
-                _subEntity: '11111111-1111-1111-1111-111111111111'
+                _subEntity: '11111111-1111-1111-1111-111111111111',
+                path: 'v5/feeds/:_id/members/:_subId'
             });
             expect(
                 extractRequestGroup(
@@ -112,7 +124,8 @@ describe('http log parser', () => {
                 admin: false,
                 entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000',
-                subEntityType: 'acknowledgements'
+                subEntityType: 'acknowledgements',
+                path: 'v5/users/:_id/acknowledgements'
             });
         });
     });
@@ -161,6 +174,7 @@ describe('http log parser', () => {
                 entityType: 'feed',
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
                 subEntityType: 'acknowledgements',
+                path: 'feed/:_id/acknowledgements',
                 context:
                     "{ _user: '2410a410-6ae7-4da5-b70e-08f951d268d9', _client: undefined, _company: '732cdb1a-23a1-4829-824f-02289cecdefd', _spark: undefined, _entity: undefined, id: '2410a410-6ae7-4da5-b70e-08f951d268d9', isContext: true }"
             });

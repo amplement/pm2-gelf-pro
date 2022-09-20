@@ -26,54 +26,56 @@ function isUuid(urlPart) {
 
 function extractQueryParams(url) {
     const [baseUrl, queryParams] = url.split('?');
-    return { baseUrl, ...(queryParams ? { queryParams } : {}) };
+    return { baseUrl: baseUrl.replace(/^\//, ''), ...(queryParams ? { queryParams } : {}) };
 }
 
 function extractRequestGroup(url) {
     const { baseUrl, queryParams } = extractQueryParams(url);
-    const group = { ...(queryParams ? { queryParams } : {}), admin: false };
-    const splittedUrl = baseUrl.trim().split('/');
-    if (splittedUrl[0] === '') {
-        splittedUrl.shift();
-    }
-    group.version = getVersion(splittedUrl[0]);
+    const group = {
+        ...(queryParams ? { queryParams } : {}),
+        admin: false,
+        path: baseUrl.replace(/[a-f0-9-]{36}/, ':_id').replace(/[a-f0-9-]{36}/, ':_subId')
+    };
+    const urlParts = baseUrl.trim().split('/');
+
+    group.version = getVersion(urlParts[0]);
     if (group.version !== 1) {
-        splittedUrl.shift();
+        urlParts.shift();
     }
-    if (splittedUrl[0] === 'admin') {
+    if (urlParts[0] === 'admin') {
         group.admin = true;
-        splittedUrl.shift();
+        urlParts.shift();
     }
-    group.entityType = splittedUrl.shift();
-    if (splittedUrl[0] && isUuid(splittedUrl[0])) {
-        group._entity = splittedUrl.shift();
+    group.entityType = urlParts.shift();
+    if (urlParts[0] && isUuid(urlParts[0])) {
+        group._entity = urlParts.shift();
     }
 
-    if (!splittedUrl[0]) {
+    if (!urlParts[0]) {
         return group;
     }
 
     if (!group._entity) {
-        group.rest = splittedUrl.join('/');
+        group.rest = urlParts.join('/');
         return group;
     }
 
-    if (!isUuid(splittedUrl[0])) {
-        group.subEntityType = splittedUrl.shift();
+    if (!isUuid(urlParts[0])) {
+        group.subEntityType = urlParts.shift();
     }
 
-    if (!splittedUrl[0]) {
+    if (!urlParts[0]) {
         return group;
     }
 
-    if (isUuid(splittedUrl[0])) {
-        group._subEntity = splittedUrl.shift();
+    if (isUuid(urlParts[0])) {
+        group._subEntity = urlParts.shift();
     }
 
-    if (!splittedUrl[0]) {
+    if (!urlParts[0]) {
         return group;
     }
-    group.rest = splittedUrl.join('/');
+    group.rest = urlParts.join('/');
 
     return group;
 }

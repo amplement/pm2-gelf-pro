@@ -104,7 +104,10 @@ function parseSubscriberHangup(log) {
 
 function parseMediaEvent(log) {
     if (log.indexOf('media event received') !== -1) {
-        return { target: { _user: getMatchSimpleValue(log, /(user [a-f0-9-]{36})/g) } };
+        return {
+            target: { _user: getMatchSimpleValue(log, /(user [a-f0-9-]{36})/g) },
+            receiving: getMatchSimpleValue(log, /(receiving (true|false))/g) === 'true'
+        };
     }
     return {};
 }

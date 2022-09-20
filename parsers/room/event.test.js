@@ -130,6 +130,7 @@ describe('event', () => {
         expect(parser(log, head)).toStrictEqual({
             _entity: 'c74bc5fe-aa97-4f50-a451-639af886e7f4',
             target: { _user: 'f7295d59-57d9-4dc4-813a-6c39ee8c1f15' },
+            receiving: true,
             parser: 'room-event'
         });
     });
