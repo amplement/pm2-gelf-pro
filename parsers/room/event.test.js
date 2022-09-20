@@ -284,4 +284,3 @@ describe('event', () => {
 
 // other
 // 2022-09-19T09:12:55.320Z api:debug:http:room Change media requested by _user 0855d692-ca93-4acd-9eab-5cb88036d40d with _client d92e9adf-a24d-4bcf-b07b-418c2a180ddc | _room undefined
-// 2022-09-16T08:03:38.015Z api:debug:action:room Removing all pcs of the entity 26a33568-129c-4a68-9c82-0fec054b03e2 | _room 26a33568-129c-4a68-9c82-0fec054b03e2
