@@ -67,6 +67,20 @@ jobs:
           name: Check prettier
           command: npm run prettier:check
 
+  publish:
+    <<: *node-build
+
+    steps:
+      - *attach_root_workspace
+
+      - run:
+          name: Publish @amplement/pm2-gelf-pro
+          command: |
+            npx -p npm-cli-login npm-cli-login
+            # fix for publishing
+            echo "registry=https://npm.pkg.github.com/amplement" > .npmrc
+            npm publish
+
 workflows:
   version: 2
   complete-workflow:
@@ -85,3 +99,12 @@ workflows:
       - check_test:
           requires:
             - fetch_dependencies
+      - publish:
+          context: org-global
+          requires:
+            - fetch_dependencies
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+(\.[0-9]+)*/

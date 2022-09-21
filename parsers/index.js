@@ -48,7 +48,9 @@ function parseBody(head, log) {
     } else if (isParseableRoom(head)) {
         return roomParser(log, head);
     }
-    return {};
+    return {
+        parser: 'not-available'
+    };
 }
 
 function convertLevel(level) {
