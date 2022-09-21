@@ -1,0 +1,6 @@
+*.test.js
+.circleci
+.eslint*
+.prettier*
+coverage
+.idea

@@ -1,0 +1,16 @@
+node_modules
+android/**
+ios/**
+.eslintrc
+.prettierrc
+dist/**
+public
+dist
+.coverage
+coverage
+.git-crypt
+.github
+.idea
+certificates
+.circleci
+package-lock.json
