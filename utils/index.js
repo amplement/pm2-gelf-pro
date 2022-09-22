@@ -34,4 +34,19 @@ function removeDate(line) {
     return line.replace(/^([0-9-:TZ.]{24} )/, '');
 }
 
-module.exports = { removeColorCharacters, getMatchSimpleValue, getMatchUserValues, removeDate };
+function removeValues(data, valueToRemove = '-') {
+    return Object.keys(data).reduce((acc, key) => {
+        if (data[key] !== valueToRemove) {
+            acc[key] = data[key];
+        }
+        return acc;
+    }, {});
+}
+
+module.exports = {
+    removeColorCharacters,
+    getMatchSimpleValue,
+    getMatchUserValues,
+    removeDate,
+    removeValues
+};

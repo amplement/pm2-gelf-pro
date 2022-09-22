@@ -1,4 +1,4 @@
-const { getMatchSimpleValue, getMatchUserValues } = require('../../utils');
+const { getMatchSimpleValue, getMatchUserValues, removeValues } = require('../../utils');
 
 function isParseable(head) {
     return head.indexOf(':event:room') !== -1;
@@ -41,15 +41,6 @@ function parser(log, head) {
         ...parseDispatchingReleaseCall(log),
         ...parseHangupRegularOutgoingCall(log)
     });
-}
-
-function removeValues(data, valueToRemove = '-') {
-    return Object.keys(data).reduce((acc, key) => {
-        if (data[key] !== valueToRemove) {
-            acc[key] = data[key];
-        }
-        return acc;
-    }, {});
 }
 
 function parsePublisherReady(log) {
