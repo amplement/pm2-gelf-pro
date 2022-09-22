@@ -73,6 +73,5 @@ function convertLevel(level) {
 
 module.exports = {
     parseHead,
-    parse,
-    default: parse
+    parse
 };

@@ -3,7 +3,7 @@ const fs = require('fs');
 const pm2 = require('pm2');
 const pmx = require('pmx');
 const gelf = require('gelf-pro');
-const parseLog = require('./parsers');
+const { parse: parseLog } = require('./parsers');
 const { removeColorCharacters, removeDate } = require('./utils');
 
 const _env = pmx.initModule();
