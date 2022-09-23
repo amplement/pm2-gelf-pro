@@ -1,12 +1,7 @@
-const { removeColorCharacters, removeDate } = require('../../utils');
-const { parseHead } = require('../index');
 const { parser, isParseable } = require('./PCS');
+const { prepareLog } = require('../../__test__/utils');
 
-function prepareLog(log) {
-    return parseHead(removeColorCharacters(removeDate(log)));
-}
-
-describe('PCS', () => {
+describe('room-pcs', () => {
     describe('parser', () => {
         const expectedResultBase = {
             parser: 'room-pcs',
@@ -26,28 +21,28 @@ describe('PCS', () => {
 
         it('should handle correctly pcs create log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.256Z api:debug:pcs:room Create | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.256Z api:debug:pcs:room Create | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({ ...expectedResultBase, action: 'Create' });
         });
 
         it('should handle correctly pcs save log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room Save | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room Save | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({ ...expectedResultBase, action: 'Save' });
         });
 
         it('should handle correctly pcs remove log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room Remove | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room Remove | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({ ...expectedResultBase, action: 'Remove' });
         });
 
         it('should handle correctly pcs partial save log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room Partial save for: _wRTCState,updatedAt | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room Partial save for: _wRTCState,updatedAt | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 ...expectedResultBase,
@@ -57,7 +52,7 @@ describe('PCS', () => {
 
         it('should handle correctly pcs ICE emitted log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room ICE candidates emitted x2 | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room ICE candidates emitted x2 | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 ...expectedResultBase,
@@ -67,7 +62,7 @@ describe('PCS', () => {
 
         it('should handle correctly pcs ICE received log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room ICE candidates received x6 | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room ICE candidates received x6 | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 ...expectedResultBase,
@@ -77,7 +72,7 @@ describe('PCS', () => {
 
         it('should handle correctly pcs SDP answer log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room SDP answer ✔ | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room SDP answer ✔ | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 ...expectedResultBase,
@@ -87,7 +82,7 @@ describe('PCS', () => {
 
         it('should handle correctly pcs SDP offer log', () => {
             const fullLog =
-                '2022-09-16T08:07:21.257Z api:debug:pcs:room SDP offer ✔ | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
+                '2022-09-16T08:07:21.257Z api:debug:pcs:room SDP offer ✔ | status waiting token b596298d-070c-40e3-af53-43fcd903a5f3 instanceId 8 serverType - profile audioLow type incoming in _entity 1c8be699-c2e5-4180-8750-8b18ea19ac40 between _user janusServer _client a997f9f0e8ebbc33e8e4813d941ad95b and _user 0e804ed5-ccb6-4f02-9426-c9efa268a315 _client 7bbb59b5-37a4-48c7-bda1-09160ce781aa';
             const { body: log, head } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 ...expectedResultBase,

@@ -11,7 +11,7 @@ describe('utils', () => {
         });
     });
 
-    describe.only('removeDate', () => {
+    describe('removeDate', () => {
         it('should remove the date at the beginning of the log', () => {
             const log =
                 '2022-09-16T08:17:57.608Z api:trace:mbc:room-sfu ⭣ roomSfu.onRegister.janus-room-proxy (subsc)';

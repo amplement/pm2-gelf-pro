@@ -14,7 +14,7 @@ function parser(log, head) {
     parsedData.action = log.split('|')[0].trim();
     parsedData.status = getMatchSimpleValue(log, /(status [a-zA-Z-]*)/g);
     parsedData.token = getMatchSimpleValue(log, /(token [a-f0-9-]{36})/g);
-    parsedData._entity = getMatchSimpleValue(log, /(entity [a-f0-9-]{36})/g);
+    parsedData._entity = getMatchSimpleValue(log, /(_entity [a-f0-9-]{36})/g);
     parsedData.profile = getMatchSimpleValue(log, /(profile [a-zA-Z-]*)/g);
     parsedData.serverType = getMatchSimpleValue(log, /(serverType [a-zA-Z-]*)/g);
     parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/g);

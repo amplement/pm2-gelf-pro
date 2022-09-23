@@ -17,12 +17,12 @@ function getMatchUserValues(line, regexp, splitChar = ' ') {
         return {
             _user: getMatchSimpleValue(
                 matchResponse[0],
-                /(_user ([a-f0-9-]{36}|janusServer))/g,
+                /(_user ([a-f0-9-]{36}|janusServer|janus))/g,
                 splitChar
             ),
             _client: getMatchSimpleValue(
                 matchResponse[0],
-                /(_client ([a-f0-9-]{36}|[a-f0-9]{32}))/g,
+                /(_client ([a-f0-9-]{36}|[a-f0-9]{32}|janusServer|janus))/g,
                 splitChar
             )
         };
@@ -34,4 +34,19 @@ function removeDate(line) {
     return line.replace(/^([0-9-:TZ.]{24} )/, '');
 }
 
-module.exports = { removeColorCharacters, getMatchSimpleValue, getMatchUserValues, removeDate };
+function removeValues(data, valueToRemove = '-') {
+    return Object.keys(data).reduce((acc, key) => {
+        if (data[key] !== valueToRemove) {
+            acc[key] = data[key];
+        }
+        return acc;
+    }, {});
+}
+
+module.exports = {
+    removeColorCharacters,
+    getMatchSimpleValue,
+    getMatchUserValues,
+    removeDate,
+    removeValues
+};

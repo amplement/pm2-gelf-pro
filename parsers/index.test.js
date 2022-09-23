@@ -1,4 +1,5 @@
 const { parse } = require('./index');
+
 describe('parsers index', () => {
     describe('parse', () => {
         it('should fail silently when logs format are unexpected', () => {

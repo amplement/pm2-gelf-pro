@@ -11,11 +11,13 @@ pm2 install @amplement/pm2-gelf-pro
 ### Update
 
 It should work if you do `pm2 install @amplement/pm2-gelf-pro` but if you get an error like:
+
 ```
 Error: ENOENT: no such file or directory, mkdir '/tmp/@amplement/pm2-gelf-pro'
 ```
 
 Do:
+
 ```shell
 pm2 uninstall @amplement/pm2-gelf-pro
 pm2 install @amplement/pm2-gelf-pro
@@ -24,6 +26,7 @@ pm2 install @amplement/pm2-gelf-pro
 ### Setup module environment variables
 
 Bind environment vars to the module process:
+
 ```shell
 pm2 set @amplement/pm2-gelf-pro:<param> <value>
 ```
