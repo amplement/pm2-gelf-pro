@@ -1,6 +1,7 @@
 const os = require('os');
 const { parser: httpParser, isParseable: isParseableHttp } = require('./http');
 const { parser: roomParser, isParseable: isParseableRoom } = require('./room');
+const { parser: wssParser, isParseable: isParseableWss } = require('./wss');
 
 function computeBaseExtras(log) {
     return {
@@ -42,15 +43,27 @@ function parseHead(line) {
     };
 }
 
+/**
+ * Parser selector.
+ * Order is important here as some logs can be processed by multiple parser
+ * ex: wss-room log work with room-wss AND wss parser.
+ * Strict parsers should occur first
+ * @param {string} head
+ * @param {string} log
+ * @returns {Object}
+ */
 function parseBody(head, log) {
     if (isParseableHttp(log, head)) {
         return httpParser(log);
     } else if (isParseableRoom(head)) {
         return roomParser(log, head);
+    } else if (isParseableWss(head)) {
+        return wssParser(log, head);
+    } else {
+        return {
+            parser: 'not-available'
+        };
     }
-    return {
-        parser: 'not-available'
-    };
 }
 
 function convertLevel(level) {

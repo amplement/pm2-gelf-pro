@@ -1,12 +1,7 @@
-const { removeColorCharacters, removeDate } = require('../../utils');
-const { parseHead } = require('../index');
 const { parser } = require('./event');
+const { prepareLog } = require('../../__test__/utils');
 
-function prepareLog(log) {
-    return parseHead(removeColorCharacters(removeDate(log)));
-}
-
-describe('event', () => {
+describe('room-event', () => {
     it('should handle correctly room creation event log', () => {
         const fullLog =
             '2022-09-16T08:03:38.221Z api:debug:event:room Room created for incoming call for userUri 503349001000@85.118.42.49 handleId 6759526312052396 sessionId 1336608306141737 | _entity 80648f9d-52ba-4e0a-8d3c-db06b6ba83ca';

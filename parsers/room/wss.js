@@ -1,4 +1,5 @@
-const { getMatchSimpleValue } = require('../../utils');
+const { getMatchSimpleValue, removeValues } = require('../../utils');
+const { parser: baseWssParser } = require('../wss');
 
 function isParseable(head) {
     return head && (head.indexOf(':wss:wrtc') !== -1 || head.indexOf(':wss:room') !== -1);
@@ -9,13 +10,11 @@ function parser(log, head) {
         return {};
     }
     const parsedData = {
+        ...baseWssParser(log, head),
         parser: 'room-wss'
     };
-    const [direction, code] = log.split(' ');
-    parsedData.direction = direction === '⭡' ? 'emitting' : 'receiving';
-    parsedData.code = code;
-    parsedData._entity = getMatchSimpleValue(log, /(_room [a-f0-9-]{36})/g);
-    return parsedData;
+    parsedData._entity = getMatchSimpleValue(log, /(_entity [a-f0-9-]{36})/g);
+    return removeValues(parsedData);
 }
 
 module.exports = {

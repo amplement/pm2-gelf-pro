@@ -1,12 +1,7 @@
 const { parser } = require('./action');
-const { parseHead } = require('../index');
-const { removeColorCharacters, removeDate } = require('../../utils');
+const { prepareLog } = require('../../__test__/utils');
 
-function prepareLog(log) {
-    return parseHead(removeColorCharacters(removeDate(log)));
-}
-
-describe('action', () => {
+describe('room-action', () => {
     it('should handle drop all pcs of a room action correctly', () => {
         const fullLog =
             'api:debug:action:room Removing all PCS | _entity d1859197-5e84-4861-9025-0972e25a7bcd +23m';

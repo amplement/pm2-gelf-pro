@@ -1,12 +1,7 @@
-const { removeColorCharacters, removeDate } = require('../../utils');
-const { parseHead } = require('../index');
 const { parser, isParseable } = require('./PCS');
+const { prepareLog } = require('../../__test__/utils');
 
-function prepareLog(log) {
-    return parseHead(removeColorCharacters(removeDate(log)));
-}
-
-describe('PCS', () => {
+describe('room-pcs', () => {
     describe('parser', () => {
         const expectedResultBase = {
             parser: 'room-pcs',
