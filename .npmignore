@@ -4,3 +4,4 @@
 .prettier*
 coverage
 .idea
+__test__
