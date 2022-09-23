@@ -36,7 +36,7 @@ describe('pcs-stats', () => {
 
     it('should parse pcs stats ICE candidate received event correctly', () => {
         const fullLog =
-            'ICE candidate n°1 received "candidate:0 1 UDP 2122252543 192.168.68.108 59772 typ host" | token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 sinceCreation 1028ms sincePrevious 130ms +127ms';
+            'api:debug:pcs:stats ICE candidate n°1 received "candidate:0 1 UDP 2122252543 192.168.68.108 59772 typ host" | token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 sinceCreation 1028ms sincePrevious 130ms +127ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
