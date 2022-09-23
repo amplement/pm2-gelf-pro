@@ -1,4 +1,4 @@
-const { parser, isParseable } = require('./PCS');
+const { parser, isParseable } = require('./pcs');
 const { prepareLog } = require('../../__test__/utils');
 
 describe('room-pcs', () => {

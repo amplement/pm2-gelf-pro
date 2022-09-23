@@ -1,26 +1,30 @@
-const { parser: parserPCS, isParseable: isParseablePCS } = require('./PCS');
+const { parser: parserPcs, isParseable: isParseablePcs } = require('./pcs');
 const { parser: parserEvent, isParseable: isParseableEvent } = require('./event');
 const { parser: parseWss, isParseable: isParseableWss } = require('./wss');
 const { parser: parseAction, isParseable: isParseableAction } = require('./action');
+const { parser: parsePcsStats, isParseable: isParseablePcsStats } = require('./action');
 
 function isParseable(head) {
     return (
-        isParseablePCS(head) ||
+        isParseablePcs(head) ||
         isParseableEvent(head) ||
         isParseableWss(head) ||
-        isParseableAction(head)
+        isParseableAction(head) ||
+        isParseablePcsStats(head)
     );
 }
 
 function parser(log, head) {
-    if (isParseablePCS(head)) {
-        return parserPCS(log, head);
+    if (isParseablePcs(head)) {
+        return parserPcs(log, head);
     } else if (isParseableEvent(head)) {
         return parserEvent(log, head);
     } else if (isParseableWss(head)) {
         return parseWss(log, head);
     } else if (isParseableAction(head)) {
         return parseAction(log, head);
+    } else if (isParseablePcsStats(head)) {
+        return parsePcsStats(log, head);
     }
     return {};
 }
