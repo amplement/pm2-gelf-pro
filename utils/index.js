@@ -43,10 +43,31 @@ function removeValues(data, valueToRemove = '-') {
     }, {});
 }
 
+function splitMultipleLogs(log) {
+    if (typeof log !== 'string') {
+        return [];
+    }
+    const match = log.match(/\+[0-9]+ms/g);
+    if (match && match.length > 1) {
+        return match.reduce(
+            (acc, value) => {
+                const length = acc.rest.indexOf(value) + value.length;
+                const element = acc.rest.substring(0, length).trim();
+                acc.rest = acc.rest.substring(length).trim();
+                acc.result.push(element);
+                return acc;
+            },
+            { rest: log, result: [] }
+        ).result;
+    }
+    return [log];
+}
+
 module.exports = {
     removeColorCharacters,
     getMatchSimpleValue,
     getMatchUserValues,
     removeDate,
-    removeValues
+    removeValues,
+    splitMultipleLogs
 };

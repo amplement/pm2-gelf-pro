@@ -1,4 +1,4 @@
-const { removeColorCharacters, removeDate } = require('./index');
+const { removeColorCharacters, removeDate, splitMultipleLogs } = require('./index');
 
 describe('utils', () => {
     describe('removeColorCharacters', () => {
@@ -25,6 +25,27 @@ describe('utils', () => {
             const logIncludingDate =
                 'api:trace:mbc:room-sfu ⭣ roomSfu.onRegister.janus-room-proxy (subsc) at 2022-09-16T08:17:57.608Z ';
             expect(removeDate(logIncludingDate)).toBe(logIncludingDate);
+        });
+    });
+
+    describe('splitMultipleLogs', () => {
+        it('should split multiple logs if needed', () => {
+            const fullLog = `api:warn  Reconnecting to REDIS +0ms
+                          api:error Fail during startup +0ms`;
+            expect(splitMultipleLogs(fullLog)).toStrictEqual([
+                'api:warn  Reconnecting to REDIS +0ms',
+                'api:error Fail during startup +0ms'
+            ]);
+        });
+
+        it('should do nothing if log looks good', () => {
+            const fullLog = `api:warn  Reconnecting to REDIS
+  api:warn interesting thing happen +0ms`;
+            expect(splitMultipleLogs(fullLog)).toStrictEqual([fullLog]);
+            expect(splitMultipleLogs('+1ms')).toStrictEqual(['+1ms']);
+            expect(splitMultipleLogs('timer +1mss')).toStrictEqual(['timer +1mss']);
+            expect(splitMultipleLogs('')).toStrictEqual(['']);
+            expect(splitMultipleLogs()).toStrictEqual([]);
         });
     });
 });
