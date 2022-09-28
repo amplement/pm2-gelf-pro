@@ -174,4 +174,15 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
         });
     });
+
+    it('should parse pcs stats created event correctly', () => {
+        const fullLog =
+            'api:debug:pcs:stats Created | token 02010338-170f-40ee-814d-fdc41db86d53 _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
+        const { body: log, head } = prepareLog(fullLog);
+        expect(parser(log, head)).toStrictEqual({
+            parser: 'room-pcs-stats',
+            token: '02010338-170f-40ee-814d-fdc41db86d53',
+            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5'
+        });
+    });
 });
