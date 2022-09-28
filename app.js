@@ -4,7 +4,7 @@ const pm2 = require('pm2');
 const pmx = require('pmx');
 const gelf = require('gelf-pro');
 const { parse: parseLog } = require('./parsers');
-const { removeColorCharacters, removeDate } = require('./utils');
+const { removeColorCharacters, removeDate, splitMultipleLogs } = require('./utils');
 
 const _env = pmx.initModule();
 const config = {
@@ -58,10 +58,19 @@ pm2.Client.launchBus((err, bus) => {
     );
 
     function handleLog(log, isError = false) {
-        if (log.process.name !== 'pm2-gelf-pro') {
+        if (log.process.name !== '@amplement/pm2-gelf-pro') {
+            const processStart = new Date();
             const cleanedData = removeColorCharacters(log.data);
-            const { logLevel, additionalData } = parseLog(log, removeDate(cleanedData), isError);
-            gelf[logLevel](cleanedData, additionalData);
+            splitMultipleLogs(cleanedData).forEach((line) => {
+                const { logLevel, additionalData } = parseLog(log, removeDate(line), isError);
+                const processEnd = new Date();
+                gelf[logLevel](line, {
+                    ...additionalData,
+                    processedAt: +processStart,
+                    processDuration: `${processEnd - processStart} ms`,
+                    fullMessage: cleanedData
+                });
+            });
         }
     }
 
@@ -74,11 +83,11 @@ pm2.Client.launchBus((err, bus) => {
     });
 
     bus.on('reconnect attempt', () => {
-        console.log('pm2-gelf-pro connector: Bus reconnecting');
+        console.log('@amplement/pm2-gelf-pro connector: Bus reconnecting');
     });
 
     bus.on('close', () => {
-        console.log('pm2-gelf-pro connector: Bus closed');
+        console.log('@amplement/pm2-gelf-pro connector: Bus closed');
         pm2.disconnectBus();
     });
 });
