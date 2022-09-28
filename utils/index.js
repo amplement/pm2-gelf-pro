@@ -63,11 +63,18 @@ function splitMultipleLogs(log) {
     return [log];
 }
 
+function extractContext(log) {
+    const match = log.match(/(^\{[a-zA-Z-0-9-_:",]}$)/);
+    console.log(match);
+    return {};
+}
+
 module.exports = {
     removeColorCharacters,
     getMatchSimpleValue,
     getMatchUserValues,
     removeDate,
     removeValues,
-    splitMultipleLogs
+    splitMultipleLogs,
+    extractContext
 };
