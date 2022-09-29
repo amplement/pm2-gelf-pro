@@ -1,4 +1,4 @@
-const { getMatchSimpleValue, removeValues } = require('../../utils');
+const { removeValues, getUuidValue } = require('../../utils');
 const { parser: baseWssParser } = require('../wss');
 
 function isParseable(head) {
@@ -13,7 +13,7 @@ function parser(log, head) {
         ...baseWssParser(log, head),
         parser: 'room-wss'
     };
-    parsedData._entity = getMatchSimpleValue(log, /(_entity [a-f0-9-]{36})/g);
+    parsedData._entity = getUuidValue(log, '_entity');
     return removeValues(parsedData);
 }
 

@@ -185,4 +185,10 @@ describe('pcs-stats', () => {
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5'
         });
     });
+
+    it('should return empty object when log is not parseable', () => {
+        const fullLog = '2022-09-19T09:12:31.215Z api:info:other coucou';
+        const { body: log, head } = prepareLog(fullLog);
+        expect(parser(log, head)).toStrictEqual({});
+    });
 });

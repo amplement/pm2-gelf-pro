@@ -1,12 +1,30 @@
+const TYPES = {
+    UUID: '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
+    USER_ID: '([a-f0-9-]{36}|janusServer|janus)',
+    CLIENT_ID: '([a-f0-9-]{36}|[a-f0-9]{32}|janusServer|janus)'
+};
+
 function removeColorCharacters(log) {
     // eslint-disable-next-line no-control-regex
     return log.replace(/\x1b/g, '').replace(/\[[0-9;]{1,11}m/g, '');
 }
 
+function getUuidValue(log, key, splitChar = ' ') {
+    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.UUID})`));
+}
+
+function getUserIdValue(log, key, splitChar = ' ') {
+    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.USER_ID})`));
+}
+
+function getClientIdValue(log, key, splitChar = ' ') {
+    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.CLIENT_ID})`));
+}
+
 function getMatchSimpleValue(line, regexp, splitChar = ' ') {
     const matchResponse = line.match(regexp);
     if (matchResponse && matchResponse.length >= 1) {
-        return matchResponse[0].split(splitChar)[1];
+        return matchResponse[0].split(splitChar).pop();
     }
     return '-';
 }
@@ -18,18 +36,18 @@ function getMatchSimpleValue(line, regexp, splitChar = ' ') {
  * @param {Object} [options={}]
  * @param {string} [options.splitChar=' ']
  * @param {string} [options.userKey='_user']
- * @param {string} [options.userPattern='[a-f0-9-]{36}|janusServer|janus']
+ * @param {string} [options.userPattern='([a-f0-9-]{36}|janusServer|janus)']
  * @param {string} [options.clientKey='_client']
- * @param {string} [options.clientPattern='[a-f0-9-]{36}|[a-f0-9]{32}|janusServer|janus']
+ * @param {string} [options.clientPattern='([a-f0-9-]{36}|[a-f0-9]{32}|janusServer|janus)']
  * @returns {{_client: (*|string), _user: (*|string)}|null}
  */
 function getMatchUserValues(line, template, options = {}) {
     const opts = {
         splitChar: ' ',
         userKey: '_user',
-        userPattern: '([a-f0-9-]{36}|janusServer|janus)',
+        userPattern: TYPES.USER_ID,
         clientKey: '_client',
-        clientPattern: '([a-f0-9-]{36}|[a-f0-9]{32}|janusServer|janus)',
+        clientPattern: TYPES.CLIENT_ID,
         ...options
     };
     if (template.indexOf('<{user}>') === -1 || template.indexOf('<{client}>') === -1) {
@@ -55,7 +73,10 @@ function getMatchUserValues(line, template, options = {}) {
             )
         };
     }
-    return null;
+    return {
+        _user: '-',
+        _client: '-'
+    };
 }
 
 function removeDate(line) {
@@ -93,7 +114,7 @@ function splitMultipleLogs(log) {
 
 function extractContext(log) {
     const match = log.match(/(\{[a-zA-Z0-9-_:",]*,"isContext":true})/);
-    if (match.length > 0) {
+    if (match && match.length > 0) {
         const context = match[0];
         return removeValues({
             _user: getMatchSimpleValue(context, /"_user":"[a-f0-9-]{36}/, '":"'),
@@ -111,8 +132,12 @@ module.exports = {
     removeColorCharacters,
     getMatchSimpleValue,
     getMatchUserValues,
+    getUuidValue,
     removeDate,
     removeValues,
     splitMultipleLogs,
-    extractContext
+    extractContext,
+    getUserIdValue,
+    getClientIdValue,
+    TYPES
 };

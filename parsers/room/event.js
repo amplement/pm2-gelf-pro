@@ -1,4 +1,11 @@
-const { getMatchSimpleValue, getMatchUserValues, removeValues } = require('../../utils');
+const {
+    getMatchSimpleValue,
+    getMatchUserValues,
+    removeValues,
+    getUuidValue,
+    getClientIdValue,
+    getUserIdValue
+} = require('../../utils');
 
 function isParseable(head) {
     return head.indexOf(':event:room') !== -1;
@@ -9,14 +16,14 @@ function parser(log, head) {
         return {};
     }
     const parsedData = {};
-    parsedData.profile = getMatchSimpleValue(log, /(profile [a-zA-Z-]*)/g);
-    parsedData._entity = getMatchSimpleValue(log, /(_entity [a-f0-9-]{36})/g);
-    parsedData.token = getMatchSimpleValue(log, /(token(:)? [a-f0-9-]{36})/g);
-    parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/g);
+    parsedData.profile = getMatchSimpleValue(log, /(profile [a-zA-Z-]*)/);
+    parsedData._entity = getUuidValue(log, '_entity');
+    parsedData.token = getMatchSimpleValue(log, /(token(:)? [a-f0-9-]{36})/);
+    parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/);
     const callData = removeValues({
-        userUri: getMatchSimpleValue(log, /(userUri [0-9.@]*)/g),
-        handleId: getMatchSimpleValue(log, /(handleId [0-9]*)/g),
-        sessionId: getMatchSimpleValue(log, /(sessionId [0-9]*)/g)
+        userUri: getMatchSimpleValue(log, /(userUri [0-9.@]*)/),
+        handleId: getMatchSimpleValue(log, /(handleId [0-9]*)/),
+        sessionId: getMatchSimpleValue(log, /(sessionId [0-9]*)/)
     });
     if (callData.userUri || callData.handleId || callData.sessionId) {
         parsedData.callData = callData;
@@ -50,7 +57,7 @@ function parseFocusStack(log) {
     if (log.indexOf('Client focus processing - targeted publisher not ready') !== -1) {
         return {
             initiator: getMatchUserValues(log, '<{user}> <{client}>'),
-            target: { _client: getMatchSimpleValue(log, /(_targetedClient [a-f0-9-]{36})/g) }
+            target: { _client: getClientIdValue(log, '_targetedClient') }
         };
     }
     return {};
@@ -64,14 +71,12 @@ function parseSubscriberHangup(log) {
                 target: getMatchUserValues(log, 'and <{user}> <{client}>')
             };
         }
-        const initiator = log.match(/(between _client [a-f0-9-]{36})/);
-        const target = log.match(/(and _client [a-f0-9-]{36})/);
         return {
             initiator: {
-                _client: initiator ? initiator[0].split(' ').pop() : '-'
+                _client: getClientIdValue(log, 'between _client')
             },
             target: {
-                _client: target ? target[0].split(' ').pop() : '-'
+                _client: getClientIdValue(log, 'and _client')
             }
         };
     }
@@ -81,8 +86,8 @@ function parseSubscriberHangup(log) {
 function parseMediaEvent(log) {
     if (log.indexOf('media event received') !== -1) {
         return {
-            target: { _user: getMatchSimpleValue(log, /(user [a-f0-9-]{36})/g) },
-            receiving: getMatchSimpleValue(log, /(receiving (true|false))/g) === 'true'
+            target: { _user: getUserIdValue(log, 'user') },
+            receiving: getMatchSimpleValue(log, /(receiving (true|false))/) === 'true'
         };
     }
     return {};
@@ -99,7 +104,7 @@ function parseResponderProperty(log) {
 
 function parseMissedRegularIncomingCall(log) {
     if (log.indexOf('Missed incoming call | _user') !== -1) {
-        return { target: { _user: getMatchSimpleValue(log, /(user [a-f0-9-]{36})/g) } };
+        return { target: { _user: getUserIdValue(log, 'user') } };
     }
     return {};
 }

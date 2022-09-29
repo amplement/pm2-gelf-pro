@@ -54,7 +54,7 @@ function parseHead(line) {
  */
 function parseBody(head, log) {
     if (isParseableHttp(log, head)) {
-        return httpParser(log);
+        return httpParser(log, head);
     } else if (isParseableRoom(head)) {
         return roomParser(log, head);
     } else if (isParseableWss(head)) {

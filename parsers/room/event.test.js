@@ -340,7 +340,10 @@ describe('room-event', () => {
             parser: 'room-event'
         });
     });
-});
 
-// other
-// 2022-09-19T09:12:55.320Z api:debug:http:room Change media requested by _user 0855d692-ca93-4acd-9eab-5cb88036d40d with _client d92e9adf-a24d-4bcf-b07b-418c2a180ddc | _room undefined
+    it('should return empty object when log is not parseable', () => {
+        const fullLog = '2022-09-19T09:12:31.215Z api:info:other coucou';
+        const { body: log, head } = prepareLog(fullLog);
+        expect(parser(log, head)).toStrictEqual({});
+    });
+});

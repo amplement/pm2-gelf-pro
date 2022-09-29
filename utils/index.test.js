@@ -69,6 +69,7 @@ describe('utils', () => {
                 _entity: '44444444-4444-4444-4444-444444444444',
                 id: '55555555-5555-5555-5555-555555555555'
             });
+            expect(extractContext('something else')).toStrictEqual({});
         });
     });
 
@@ -155,6 +156,22 @@ describe('utils', () => {
                 _user: '0000',
                 _client: '12345'
             });
+            expect(getMatchUserValues('u c', '<{user}> <{client}>')).toStrictEqual({
+                _user: '-',
+                _client: '-'
+            });
+        });
+
+        it('should throw an error if template does not match', () => {
+            expect.assertions(1);
+            try {
+                expect(getMatchUserValues('u 1', '<{user}>')).toStrictEqual({
+                    _user: '0000',
+                    _client: '12345'
+                });
+            } catch (e) {
+                expect(e.message).toBe('Template does not contain <{_user}> and <{_client}>');
+            }
         });
     });
 });
