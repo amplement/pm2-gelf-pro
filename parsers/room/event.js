@@ -39,14 +39,8 @@ function parser(log, head) {
 function parsePublisherReady(log) {
     if (log.indexOf('ublisher ready') !== -1) {
         return {
-            initiator: getMatchUserValues(
-                log,
-                /(between _user ([a-f0-9-]{36}|janus) _client ([a-f0-9-]{36}|janus))/g
-            ),
-            target: getMatchUserValues(
-                log,
-                /(and _user ([a-f0-9-]{36}|janus) _client ([a-f0-9-]{36}|janus))/g
-            )
+            initiator: getMatchUserValues(log, 'between <{user}> <{client}>'),
+            target: getMatchUserValues(log, 'and <{user}> <{client}>')
         };
     }
     return {};
@@ -55,10 +49,7 @@ function parsePublisherReady(log) {
 function parseFocusStack(log) {
     if (log.indexOf('Client focus processing - targeted publisher not ready') !== -1) {
         return {
-            initiator: getMatchUserValues(
-                log,
-                /(_user ([a-f0-9-]{36}|janusServer) _client ([a-f0-9-]{36}|[a-f0-9]{32}))/g
-            ),
+            initiator: getMatchUserValues(log, '<{user}> <{client}>'),
             target: { _client: getMatchSimpleValue(log, /(_targetedClient [a-f0-9-]{36})/g) }
         };
     }
@@ -69,11 +60,8 @@ function parseSubscriberHangup(log) {
     if (log.indexOf('Subscriber hangup |') !== -1) {
         if (log.indexOf('between _client') === -1) {
             return {
-                initiator: getMatchUserValues(
-                    log,
-                    /(between _user [a-f0-9-]{36} _client [a-f0-9-]{36})/g
-                ),
-                target: getMatchUserValues(log, /(and _user [a-f0-9-]{36} _client [a-f0-9-]{36})/g)
+                initiator: getMatchUserValues(log, 'between <{user}> <{client}>'),
+                target: getMatchUserValues(log, 'and <{user}> <{client}>')
             };
         }
         const initiator = log.match(/(between _client [a-f0-9-]{36})/);
@@ -103,10 +91,7 @@ function parseMediaEvent(log) {
 function parseResponderProperty(log) {
     if (log.indexOf("Responder property '") !== -1) {
         return {
-            initiator: getMatchUserValues(
-                log,
-                /(_user ([a-f0-9-]{36}|janusServer) with _client ([a-f0-9-]{36}|[a-f0-9]{32}))/g
-            )
+            initiator: getMatchUserValues(log, '<{user}> with <{client}>')
         };
     }
     return {};
@@ -122,10 +107,7 @@ function parseMissedRegularIncomingCall(log) {
 function parseHangupRegularOutgoingCall(log) {
     if (log.indexOf('Hangup outgoing call ') !== -1) {
         return {
-            target: getMatchUserValues(
-                log,
-                /(_user ([a-f0-9-]{36}|janusServer) _client ([a-f0-9-]{36}|[a-f0-9]{32}))/g
-            )
+            target: getMatchUserValues(log, '<{user}> <{client}>')
         };
     }
     return {};
@@ -134,10 +116,7 @@ function parseHangupRegularOutgoingCall(log) {
 function parseDispatchingReleaseCall(log) {
     if (log.indexOf('dispatching release call') !== -1) {
         return {
-            target: getMatchUserValues(
-                log,
-                /(for _user ([a-f0-9-]{36}|janusServer) _client ([a-f0-9-]{36}|[a-f0-9]{32}))/g
-            )
+            target: getMatchUserValues(log, 'for <{user}> <{client}>')
         };
     }
     return {};

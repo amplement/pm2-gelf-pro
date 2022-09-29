@@ -19,14 +19,8 @@ function parser(log, head) {
     parsedData.serverType = getMatchSimpleValue(log, /(serverType [a-zA-Z-]*)/g);
     parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/g);
     parsedData.type = getMatchSimpleValue(log, /(type [a-zA-Z-]*)/g);
-    parsedData.initiator = getMatchUserValues(
-        log,
-        /(between _user ([a-f0-9-]{36}|janusServer) _client ([a-f0-9-]{36}|[a-f0-9]{32}))/g
-    );
-    parsedData.target = getMatchUserValues(
-        log,
-        /(and _user ([a-f0-9-]{36}|janusServer) _client ([a-f0-9-]{36}|[a-f0-9]{32}))/g
-    );
+    parsedData.initiator = getMatchUserValues(log, 'between <{user}> <{client}>');
+    parsedData.target = getMatchUserValues(log, 'and <{user}> <{client}>');
     return parsedData;
 }
 
