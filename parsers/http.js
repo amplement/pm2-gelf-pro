@@ -1,5 +1,6 @@
 const { TYPES, extractContext } = require('../utils');
 const FULL_UUID_PATTERN = new RegExp(`^${TYPES.UUID}$`);
+const CLIENT_PATTERN = new RegExp(`(${TYPES.UUID}$)`);
 const UUID_PATTERN = new RegExp(TYPES.UUID);
 
 function isParseable(log, head) {
@@ -96,9 +97,7 @@ function extractAndProcessContext(log) {
 function parseLogQueue(log) {
     const parsed = {};
     let processedLog = log.trim();
-    const matchClientId = processedLog.match(
-        /([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$)/
-    );
+    const matchClientId = processedLog.match(CLIENT_PATTERN);
     if (matchClientId && matchClientId.length > 0) {
         parsed._client = matchClientId[0];
         processedLog = processedLog.replace(matchClientId[0], '').trim();
