@@ -1,4 +1,10 @@
-const { getMatchSimpleValue, removeValues, getUuidValue } = require('../utils');
+const {
+    getMatchSimpleValue,
+    removeValues,
+    getUuidValue,
+    getUserIdValue,
+    getClientIdValue
+} = require('../utils');
 
 function isParseable(head) {
     return head && head.indexOf(':wss') !== -1;
@@ -17,8 +23,8 @@ function parser(log, head) {
     parsedData.ip = getMatchSimpleValue(log, /(ip [a-f0-9.:]*)/);
     parsedData.device = getMatchSimpleValue(log, /(device [a-zA-Z]*)/);
     parsedData.user = removeValues({
-        _user: getUuidValue(log, '_user'),
-        _client: getUuidValue(log, '_client'),
+        _user: getUserIdValue(log, '_user'),
+        _client: getClientIdValue(log, '_client'),
         _spark: getUuidValue(log, '_spark')
     });
 

@@ -10,15 +10,19 @@ function removeColorCharacters(log) {
 }
 
 function getUuidValue(log, key, splitChar = ' ') {
-    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.UUID})`));
+    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.UUID})`), splitChar);
 }
 
 function getUserIdValue(log, key, splitChar = ' ') {
-    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.USER_ID})`));
+    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.USER_ID})`), splitChar);
 }
 
 function getClientIdValue(log, key, splitChar = ' ') {
-    return getMatchSimpleValue(log, new RegExp(`(${key}${splitChar}${TYPES.CLIENT_ID})`));
+    return getMatchSimpleValue(
+        log,
+        new RegExp(`(${key}${splitChar}${TYPES.CLIENT_ID})`),
+        splitChar
+    );
 }
 
 function getMatchSimpleValue(line, regexp, splitChar = ' ') {
@@ -117,12 +121,12 @@ function extractContext(log) {
     if (match && match.length > 0) {
         const context = match[0];
         return removeValues({
-            _user: getMatchSimpleValue(context, /"_user":"[a-f0-9-]{36}/, '":"'),
-            _client: getMatchSimpleValue(context, /"_client":"[a-f0-9-]{36}/, '":"'),
-            _company: getMatchSimpleValue(context, /"_company":"[a-f0-9-]{36}/, '":"'),
-            _spark: getMatchSimpleValue(context, /"_spark":"[a-f0-9-]{36}/, '":"'),
-            _entity: getMatchSimpleValue(context, /"_entity":"[a-f0-9-]{36}/, '":"'),
-            id: getMatchSimpleValue(context, /"id":"[a-f0-9-]{36}/, '":"')
+            _user: getUserIdValue(context, '"_user', '":"'),
+            _client: getClientIdValue(context, '"_client', '":"'),
+            _company: getUuidValue(context, '"_company', '":"'),
+            _spark: getUuidValue(context, '"_spark', '":"'),
+            _entity: getUuidValue(context, '"_entity', '":"'),
+            id: getUuidValue(context, '"id', '":"')
         });
     }
     return {};
