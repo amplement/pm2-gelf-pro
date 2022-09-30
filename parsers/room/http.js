@@ -1,8 +1,7 @@
-const { removeValues, getUuidValue } = require('../../utils');
-const { parser: baseWssParser } = require('../wss');
+const { removeValues, getUuidValue, getUserIdValue, getClientIdValue } = require('../../utils');
 
 function isParseable(head) {
-    return head && (head.indexOf(':wss:wrtc') !== -1 || head.indexOf(':wss:room') !== -1);
+    return head && head.endsWith(':http:room');
 }
 
 function parser(log, head) {
@@ -10,10 +9,13 @@ function parser(log, head) {
         return {};
     }
     const parsedData = {
-        ...baseWssParser(log, head),
-        parser: 'room-wss'
+        parser: 'room-http'
     };
+
     parsedData._entity = getUuidValue(log, '_entity');
+    parsedData._user = getUserIdValue(log, '_user');
+    parsedData._client = getClientIdValue(log, '_client');
+
     return removeValues(parsedData);
 }
 

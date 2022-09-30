@@ -3,6 +3,7 @@ const { parser: parserEvent, isParseable: isParseableEvent } = require('./event'
 const { parser: parseWss, isParseable: isParseableWss } = require('./wss');
 const { parser: parseAction, isParseable: isParseableAction } = require('./action');
 const { parser: parsePcsStats, isParseable: isParseablePcsStats } = require('./pcs-stats');
+const { parser: parseHttp, isParseable: isParseableHttp } = require('./http');
 
 function isParseable(head) {
     return (
@@ -10,7 +11,8 @@ function isParseable(head) {
         isParseableEvent(head) ||
         isParseableWss(head) ||
         isParseableAction(head) ||
-        isParseablePcsStats(head)
+        isParseablePcsStats(head) ||
+        isParseableHttp(head)
     );
 }
 
@@ -25,6 +27,8 @@ function parser(log, head) {
         return parseAction(log, head);
     } else if (isParseablePcsStats(head)) {
         return parsePcsStats(log, head);
+    } else if (isParseableHttp(head)) {
+        return parseHttp(log, head);
     }
     return {};
 }

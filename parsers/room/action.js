@@ -1,4 +1,4 @@
-const { getMatchSimpleValue, removeValues } = require('../../utils');
+const { removeValues, getUuidValue, getUserIdValue, getClientIdValue } = require('../../utils');
 
 function isParseable(head) {
     return !!(head && head.match(/:action:room$/));
@@ -11,7 +11,7 @@ function parser(log, head) {
     const parsedData = {
         parser: 'room-action'
     };
-    parsedData._entity = getMatchSimpleValue(log, /(_entity [a-f0-9-]{36})/g);
+    parsedData._entity = getUuidValue(log, '_entity');
 
     return removeValues({
         ...parsedData,
@@ -23,7 +23,7 @@ function parser(log, head) {
 function parseCreateSipPCS(log) {
     if (log.indexOf('Create sip PCS ') !== -1) {
         return {
-            initiator: { _user: getMatchSimpleValue(log, /(_user ([a-f0-9-]{36}|janusServer))/g) }
+            initiator: { _user: getUserIdValue(log, '_user') }
         };
     }
     return {};
@@ -36,7 +36,7 @@ function parseLimitedRemovingActions(log) {
     ) {
         return {
             initiator: {
-                _client: getMatchSimpleValue(log, /(_client [a-f0-9-]{36})/g)
+                _client: getClientIdValue(log, '_client')
             }
         };
     }

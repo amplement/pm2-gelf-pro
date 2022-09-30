@@ -1,4 +1,7 @@
-const UUID_PATTERN = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+const { TYPES, extractContext } = require('../utils');
+const FULL_UUID_PATTERN = new RegExp(`^${TYPES.UUID}$`);
+const CLIENT_PATTERN = new RegExp(`(${TYPES.UUID}$)`);
+const UUID_PATTERN = new RegExp(TYPES.UUID);
 
 function isParseable(log, head) {
     return !!(
@@ -14,14 +17,14 @@ function isString(value) {
 }
 
 function getVersion(urlPart) {
-    if (isString(urlPart) && !!urlPart.match(/v[0-9]{1,3}/g)) {
+    if (isString(urlPart) && !!urlPart.match(/v[0-9]{1,3}/)) {
         return parseInt(urlPart.replace('v', ''), 10);
     }
     return 1;
 }
 
 function isUuid(urlPart) {
-    return !!(isString(urlPart) && urlPart.match(UUID_PATTERN));
+    return !!(isString(urlPart) && urlPart.match(FULL_UUID_PATTERN));
 }
 
 function extractQueryParams(url) {
@@ -34,7 +37,7 @@ function extractRequestGroup(url) {
     const group = {
         ...(queryParams ? { queryParams } : {}),
         admin: false,
-        path: baseUrl.replace(/[a-f0-9-]{36}/, ':_id').replace(/[a-f0-9-]{36}/, ':_subId')
+        path: baseUrl.replace(UUID_PATTERN, ':_id').replace(UUID_PATTERN, ':_subId')
     };
     const urlParts = baseUrl.trim().split('/');
 
@@ -84,7 +87,7 @@ function extractAndProcessContext(log) {
     const matchedContext = log.match(/({.*}$)/);
     if (matchedContext && matchedContext.length > 0) {
         return {
-            context: matchedContext[0].trim(),
+            context: extractContext(matchedContext[0].trim()),
             log: log.replace(matchedContext[0], '').trim()
         };
     }
@@ -94,9 +97,7 @@ function extractAndProcessContext(log) {
 function parseLogQueue(log) {
     const parsed = {};
     let processedLog = log.trim();
-    const matchClientId = processedLog.match(
-        /([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$)/
-    );
+    const matchClientId = processedLog.match(CLIENT_PATTERN);
     if (matchClientId && matchClientId.length > 0) {
         parsed._client = matchClientId[0];
         processedLog = processedLog.replace(matchClientId[0], '').trim();
@@ -105,20 +106,10 @@ function parseLogQueue(log) {
     return parsed;
 }
 
-function cleanIp(ip) {
-    const splittedIp = ip.split('');
-    if (
-        !splittedIp
-            .slice(0, 4)
-            .join('')
-            .match(/^[0-9a-f.:]{4}$/)
-    ) {
-        return splittedIp.slice(4).join('');
+function parser(log, head) {
+    if (!isParseable(log, head)) {
+        return {};
     }
-    return ip;
-}
-
-function parser(log) {
     const { context, log: logWithoutContext } = extractAndProcessContext(log);
     const [ip, , country, , httpVerb, url, responseCode, executionTime, ...rest] = logWithoutContext
         .trim()
@@ -126,7 +117,7 @@ function parser(log) {
     const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
         parser: 'http',
-        ip: cleanIp(ip),
+        ip,
         country,
         httpVerb: httpVerb.replace(':', ''),
         url,

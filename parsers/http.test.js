@@ -7,6 +7,7 @@ const {
     extractAndProcessContext,
     parseLogQueue
 } = require('./http');
+const { prepareLog } = require('../__test__/utils');
 
 describe('http log parser', () => {
     describe('getVersion', () => {
@@ -132,12 +133,16 @@ describe('http log parser', () => {
 
     describe('extractAndProcessContext', () => {
         it('should extract the context of an http request', () => {
-            expect(extractAndProcessContext('a b c {d e f}')).toStrictEqual({
-                context: '{d e f}',
+            expect(
+                extractAndProcessContext(
+                    'a b c {"_user":"00000000-0000-0000-0000-000000000000","isContext":true}'
+                )
+            ).toStrictEqual({
+                context: { _user: '00000000-0000-0000-0000-000000000000' },
                 log: 'a b c'
             });
-            expect(extractAndProcessContext('a b c {d e f} g')).toStrictEqual({
-                log: 'a b c {d e f} g'
+            expect(extractAndProcessContext('a b c {"stuff":true} g')).toStrictEqual({
+                log: 'a b c {"stuff":true} g'
             });
             expect(extractAndProcessContext('a b c')).toStrictEqual({ log: 'a b c' });
         });
@@ -155,10 +160,10 @@ describe('http log parser', () => {
     });
 
     describe('parser', () => {
-        it('should read and format an http log', () => {
-            const log =
-                "89.101.10.145 [2022-09-12T14:37:31.994Z] - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 { _user: '2410a410-6ae7-4da5-b70e-08f951d268d9', _client: undefined, _company: '732cdb1a-23a1-4829-824f-02289cecdefd', _spark: undefined, _entity: undefined, id: '2410a410-6ae7-4da5-b70e-08f951d268d9', isContext: true }";
-            expect(parser(log)).toStrictEqual({
+        it.only('should read and format an http log', () => {
+            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 {"_user":"2410a410-6ae7-4da5-b70e-08f951d268d9","_client":undefined,"_company":"732cdb1a-23a1-4829-824f-02289cecdefd","_spark":undefined,"_entity":undefined,"id":"2410a410-6ae7-4da5-b70e-08f951d268d9","isContext":true}`;
+            const { head, body: log } = prepareLog(fullLog);
+            expect(parser(log, head)).toStrictEqual({
                 parser: 'http',
                 ip: '89.101.10.145',
                 country: '-',
@@ -175,9 +180,41 @@ describe('http log parser', () => {
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
                 subEntityType: 'acknowledgements',
                 path: 'feed/:_id/acknowledgements',
-                context:
-                    "{ _user: '2410a410-6ae7-4da5-b70e-08f951d268d9', _client: undefined, _company: '732cdb1a-23a1-4829-824f-02289cecdefd', _spark: undefined, _entity: undefined, id: '2410a410-6ae7-4da5-b70e-08f951d268d9', isContext: true }"
+                context: {
+                    _user: '2410a410-6ae7-4da5-b70e-08f951d268d9',
+                    _company: '732cdb1a-23a1-4829-824f-02289cecdefd',
+                    id: '2410a410-6ae7-4da5-b70e-08f951d268d9'
+                }
             });
+        });
+
+        it('should read and format an http log without context', () => {
+            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9`;
+            const { head, body: log } = prepareLog(fullLog);
+            expect(parser(log, head)).toStrictEqual({
+                parser: 'http',
+                ip: '89.101.10.145',
+                country: '-',
+                httpVerb: 'POST',
+                url: '/feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements',
+                responseCode: '201',
+                executionTime: 0.035,
+                userAgent:
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33',
+                _client: 'e0aa11f3-bc60-4363-a15c-bf185435e2e9',
+                admin: false,
+                version: 1,
+                entityType: 'feed',
+                _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
+                subEntityType: 'acknowledgements',
+                path: 'feed/:_id/acknowledgements'
+            });
+        });
+
+        it('should return empty object when log is not parseable', () => {
+            const fullLog = '2022-09-19T09:12:31.215Z api:info:other coucou';
+            const { body: log, head } = prepareLog(fullLog);
+            expect(parser(log, head)).toStrictEqual({});
         });
     });
 });

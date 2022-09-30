@@ -61,4 +61,10 @@ describe('room-action', () => {
             }
         });
     });
+
+    it('should return empty object when log is not parseable', () => {
+        const fullLog = '2022-09-19T09:12:31.215Z api:info:other coucou';
+        const { body: log, head } = prepareLog(fullLog);
+        expect(parser(log, head)).toStrictEqual({});
+    });
 });
