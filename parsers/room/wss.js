@@ -14,6 +14,7 @@ function parser(log, head) {
         parser: 'room-wss'
     };
     parsedData._entity = getUuidValue(log, '_entity');
+    parsedData.token = getUuidValue(log, 'token');
     return removeValues(parsedData);
 }
 
