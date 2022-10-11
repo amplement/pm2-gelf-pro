@@ -6,7 +6,7 @@ const UUID_PATTERN = new RegExp(TYPES.UUID);
 function isParseable(log, head) {
     return !!(
         head &&
-        head.endsWith(':http') &&
+        head.match(/:http:?/) &&
         log &&
         log.match(/(POST|GET|PATCH|DELETE|HEAD|PUT):/)
     );
