@@ -161,7 +161,7 @@ describe('http log parser', () => {
 
     describe('parser', () => {
         it('should read and format an http log', () => {
-            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 {"_user":"2410a410-6ae7-4da5-b70e-08f951d268d9","_client":undefined,"_company":"732cdb1a-23a1-4829-824f-02289cecdefd","_spark":undefined,"_entity":undefined,"id":"2410a410-6ae7-4da5-b70e-08f951d268d9","isContext":true}`;
+            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] 75c029d39e85d357-CDG - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 {"_user":"2410a410-6ae7-4da5-b70e-08f951d268d9","_client":undefined,"_company":"732cdb1a-23a1-4829-824f-02289cecdefd","_spark":undefined,"_entity":undefined,"id":"2410a410-6ae7-4da5-b70e-08f951d268d9","isContext":true}`;
             const { head, body: log } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 parser: 'http',
@@ -175,6 +175,7 @@ describe('http log parser', () => {
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33',
                 _client: 'e0aa11f3-bc60-4363-a15c-bf185435e2e9',
                 admin: false,
+                cloudflareRay: '75c029d39e85d357-CDG',
                 version: 1,
                 entityType: 'feed',
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
@@ -189,7 +190,7 @@ describe('http log parser', () => {
         });
 
         it('should read and format an http log without context', () => {
-            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9`;
+            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] 75c029d39e85d357-CDG - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9`;
             const { head, body: log } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 parser: 'http',
@@ -203,6 +204,7 @@ describe('http log parser', () => {
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33',
                 _client: 'e0aa11f3-bc60-4363-a15c-bf185435e2e9',
                 admin: false,
+                cloudflareRay: '75c029d39e85d357-CDG',
                 version: 1,
                 entityType: 'feed',
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
@@ -212,7 +214,7 @@ describe('http log parser', () => {
         });
 
         it('should parse room http log as regular http log', () => {
-            const fullLog = `2022-10-09T22:03:47.280Z api:info:http:room 185.234.70.46 [2022-10-09T22:03:47.273Z] FR ⭣ GET: /rooms 200 rt=0.007 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34 3d728d32-83ed-4d4d-b309-77dae75d8779 { _user: '3ff83a44-e696-4706-bc85-e05ec9722912', _client: undefined, _company: 'd84c80c6-e63e-4cb7-9ca9-445628e9e845', _spark: undefined, _entity: undefined, id: '3ff83a44-e696-4706-bc85-e05ec9722912', isContext: true }`;
+            const fullLog = `2022-10-09T22:03:47.280Z api:info:http:room 185.234.70.46 [2022-10-09T22:03:47.273Z] - FR ⭣ GET: /rooms 200 rt=0.007 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34 3d728d32-83ed-4d4d-b309-77dae75d8779 { _user: '3ff83a44-e696-4706-bc85-e05ec9722912', _client: undefined, _company: 'd84c80c6-e63e-4cb7-9ca9-445628e9e845', _spark: undefined, _entity: undefined, id: '3ff83a44-e696-4706-bc85-e05ec9722912', isContext: true }`;
             const { head, body: log } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 parser: 'http',
@@ -226,6 +228,7 @@ describe('http log parser', () => {
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34',
                 _client: '3d728d32-83ed-4d4d-b309-77dae75d8779',
                 admin: false,
+                cloudflareRay: '-',
                 version: 1,
                 entityType: 'rooms',
                 path: 'rooms',

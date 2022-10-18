@@ -111,13 +111,13 @@ function parser(log, head) {
         return {};
     }
     const { context, log: logWithoutContext } = extractAndProcessContext(log);
-    const [ip, , country, , httpVerb, url, responseCode, executionTime, ...rest] = logWithoutContext
-        .trim()
-        .split(' ');
+    const [ip, , cloudflareRay, country, , httpVerb, url, responseCode, executionTime, ...rest] =
+        logWithoutContext.trim().split(' ');
     const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
         parser: 'http',
         ip,
+        cloudflareRay,
         country,
         httpVerb: httpVerb.replace(':', ''),
         url,
