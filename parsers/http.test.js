@@ -161,7 +161,7 @@ describe('http log parser', () => {
 
     describe('parser', () => {
         it('should read and format an http log', () => {
-            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] 75c029d39e85d357-CDG - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 {"_user":"2410a410-6ae7-4da5-b70e-08f951d268d9","_client":undefined,"_company":"732cdb1a-23a1-4829-824f-02289cecdefd","_spark":undefined,"_entity":undefined,"id":"2410a410-6ae7-4da5-b70e-08f951d268d9","isContext":true}`;
+            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] cfRay=75c029d39e85d357-CDG - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9 {"_user":"2410a410-6ae7-4da5-b70e-08f951d268d9","_client":undefined,"_company":"732cdb1a-23a1-4829-824f-02289cecdefd","_spark":undefined,"_entity":undefined,"id":"2410a410-6ae7-4da5-b70e-08f951d268d9","isContext":true}`;
             const { head, body: log } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 parser: 'http',
@@ -190,7 +190,7 @@ describe('http log parser', () => {
         });
 
         it('should read and format an http log without context', () => {
-            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] 75c029d39e85d357-CDG - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9`;
+            const fullLog = `api:info:http 89.101.10.145 [2022-09-12T14:37:31.994Z] cfRay=75c029d39e85d357-CDG - ⭣ POST: /feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements 201 rt=0.035 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33 e0aa11f3-bc60-4363-a15c-bf185435e2e9`;
             const { head, body: log } = prepareLog(fullLog);
             expect(parser(log, head)).toStrictEqual({
                 parser: 'http',

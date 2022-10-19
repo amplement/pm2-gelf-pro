@@ -117,7 +117,7 @@ function parser(log, head) {
     return {
         parser: 'http',
         ip,
-        cloudflareRay,
+        cloudflareRay: cloudflareRay.replace('cfRay=', ''),
         country,
         httpVerb: httpVerb.replace(':', ''),
         url,
