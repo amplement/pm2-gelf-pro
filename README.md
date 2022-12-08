@@ -2,13 +2,24 @@
 
 ## Installation
 
-### First installation
+### Dev
+
+Go to the root of this repository and do:
+
+```shell
+pm2 install .
+pm2 set @amplement/pm2-gelf-pro:gelf_fields '{"X-OVH-TOKEN":"this-is-my-token"}'
+```
+
+### Prod
+
+#### First installation
 
 ```shell
 pm2 install @amplement/pm2-gelf-pro
 ```
 
-### Update
+#### Update
 
 It should work if you do `pm2 install @amplement/pm2-gelf-pro` but if you get an error like:
 
@@ -23,7 +34,7 @@ pm2 uninstall @amplement/pm2-gelf-pro
 pm2 install @amplement/pm2-gelf-pro
 ```
 
-### Setup module environment variables
+#### Setup module environment variables
 
 Bind environment vars to the module process:
 

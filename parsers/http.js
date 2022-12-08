@@ -136,17 +136,21 @@ function parser(log, head) {
     const { userAgent, _client } = parseLogQueue(rest.join(' '));
     return {
         parser: 'http',
-        ip,
-        cloudflareRay: cloudflareRay.replace('cfRay=', ''),
-        country,
-        httpVerb: httpVerb.replace(':', ''),
-        url,
-        responseCode,
-        executionTime: parseFloat(executionTime.replace('rt=', '')),
-        userAgent,
-        _client,
-        ...extractRequestGroup(url),
-        ...(context ? { context } : {})
+        // ip,
+        // cloudflareRay: cloudflareRay.replace('cfRay=', ''),
+        // country,
+        // httpVerb: httpVerb.replace(':', ''),
+        // url,
+        // responseCode,
+        execution_time_num: executionTime.replace('rt=', '')
+        // execution_time: executionTime.replace('rt=', ''),
+        // userAgent,
+        // test_bool: 'true',
+        // test: 'true',
+        // new_num: '10',
+        // _client,
+        // ...extractRequestGroup(url),
+        // ...(context ? { context } : {})
     };
 }
 

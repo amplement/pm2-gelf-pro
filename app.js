@@ -64,6 +64,11 @@ pm2.Client.launchBus((err, bus) => {
             splitMultipleLogs(cleanedData).forEach((line) => {
                 const { logLevel, additionalData } = parseLog(log, removeDate(line), isError);
                 const processEnd = new Date();
+                console.log();
+                if (additionalData && additionalData.executionTime) {
+                    console.log('to : ', typeof additionalData.executionTime);
+                }
+
                 gelf[logLevel](line, {
                     ...additionalData,
                     processedAt: +processStart,
