@@ -235,6 +235,31 @@ describe('http log parser', () => {
                 context: {}
             });
         });
+
+        it('should parse http log including space into IP addresses', () => {
+            const fullLog = `2022-12-07T09:39:00.077Z api:info:http 10.59.198.68, 192.54.145.139,245.233.239.9 [2022-12-07T09:39:00.069Z] cfRay=775c4aa54a1dd3af-CDG FR ⭣ HEAD: /companies?_parent=639dd801-92b5-4e68-9915-f75000d293cc&subdomain=xdxd 404 rt=0.007 Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0 - { _user: undefined, _client: undefined, _company: undefined, _spark: undefined, _entity: undefined, id: undefined, isContext: true }`;
+            const { head, body: log } = prepareLog(fullLog);
+            expect(parser(log, head)).toStrictEqual({
+                parser: 'http',
+                ip: '10.59.198.68,192.54.145.139,245.233.239.9',
+                country: 'FR',
+                httpVerb: 'HEAD',
+                url: '/companies?_parent=639dd801-92b5-4e68-9915-f75000d293cc&subdomain=xdxd',
+                responseCode: '404',
+                executionTime: 0.007,
+                userAgent:
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0',
+                _client: '-',
+                admin: false,
+                queryParams: '_parent=639dd801-92b5-4e68-9915-f75000d293cc&subdomain=xdxd',
+                cloudflareRay: '775c4aa54a1dd3af-CDG',
+                version: 1,
+                entityType: 'companies',
+                path: 'companies',
+                context: {}
+            });
+        });
+
         it('should return empty object when log is not parseable', () => {
             const fullLog = '2022-09-19T09:12:31.215Z api:info:other coucou';
             const { body: log, head } = prepareLog(fullLog);

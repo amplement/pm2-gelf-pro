@@ -88,16 +88,36 @@ function extractAndProcessContext(log) {
     if (matchedContext && matchedContext.length > 0) {
         return {
             context: extractContext(matchedContext[0].trim()),
-            log: log.replace(matchedContext[0], '').trim()
+            log: preventMalformedFields(log.replace(matchedContext[0], '').trim())
         };
     }
     return { log };
 }
 
+function preventMalformedFields(log) {
+    return preventMalformedIPField(log);
+}
+function preventMalformedIPField(log) {
+    const [ip, ...rest] = log.split(' ');
+    const { ip: allIps, rest: cleanedRest } = rest.reduce(
+        (acc, part) => {
+            const matched = part.match(/(^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3},?)+/gm);
+            if (matched && matched.length === 1) {
+                acc.ip += `${part}`;
+            } else {
+                acc.rest.push(part);
+            }
+            return acc;
+        },
+        { ip, rest: [] }
+    );
+    return `${allIps} ${cleanedRest.join(' ')}`;
+}
+
 function parseLogQueue(log) {
     const parsed = {};
     let processedLog = log.trim();
-    const matchClientId = processedLog.match(CLIENT_PATTERN);
+    const matchClientId = processedLog.match(CLIENT_PATTERN) || processedLog.match(/-$/g);
     if (matchClientId && matchClientId.length > 0) {
         parsed._client = matchClientId[0];
         processedLog = processedLog.replace(matchClientId[0], '').trim();
