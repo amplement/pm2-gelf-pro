@@ -1,7 +1,7 @@
 const { removeValues, getUuidValue, getUserIdValue, getClientIdValue } = require('../../utils');
 
 function isParseable(head) {
-    return !!(head && head.match(/:action:room$/));
+    return !!(head && head.match(/:service:room$/));
 }
 
 function parser(log, head) {
@@ -9,7 +9,7 @@ function parser(log, head) {
         return {};
     }
     const parsedData = {
-        parser: 'room-action'
+        parser: 'room-service'
     };
     parsedData._entity = getUuidValue(log, '_entity');
 

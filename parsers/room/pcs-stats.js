@@ -1,7 +1,11 @@
-const { getUuidValue } = require('../../utils');
+const { getUuidValue, getMatchSimpleValue } = require('../../utils');
 
 function isParseable(head) {
-    return head.indexOf(':pcs:stats') !== -1;
+    return (
+        head.indexOf(':pcs-stats:room') !== -1 ||
+        // old naming
+        head.indexOf(':pcs:stats') !== -1
+    );
 }
 
 function parser(log, head) {
@@ -13,6 +17,7 @@ function parser(log, head) {
     };
     parsedData.token = getUuidValue(log, 'token');
     parsedData._entity = getUuidValue(log, '_entity');
+    parsedData.profileKey = getMatchSimpleValue(log, /(profileKey [a-zA-Z-]+)/);
 
     return parsedData;
 }

@@ -16,7 +16,7 @@ function parser(log, head) {
         return {};
     }
     const parsedData = {};
-    parsedData.profile = getMatchSimpleValue(log, /(profile [a-zA-Z-]*)/);
+    parsedData.profileKey = getMatchSimpleValue(log, /(profileKey [a-zA-Z-]*)/);
     parsedData._entity = getUuidValue(log, '_entity');
     parsedData.token = getMatchSimpleValue(log, /(token(:)? [a-f0-9-]{36})/);
     parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/);

@@ -14,11 +14,12 @@ function parse(log, message, isError = false) {
     let additionalData = {};
     let logLevel = 'info';
     try {
-        const { head, level, type, subType, body } = parseHead(message);
+        const { head, origin, level, type, entity, body } = parseHead(message);
         logLevel = level;
         additionalData = {
+            origin,
             type,
-            subType,
+            entity,
             ...computeBaseExtras(log),
             ...parseBody(head, body)
         };
@@ -31,13 +32,13 @@ function parse(log, message, isError = false) {
 
 function parseHead(line) {
     const [head, ...body] = line.trim().split(' ');
-    const [service, level, type, subType, ...rest] = head.split(':');
+    const [origin, level, type, entity, ...rest] = head.split(':');
     return {
         head,
-        service,
+        origin,
         level: convertLevel(level),
         type,
-        subType,
+        entity,
         headRest: rest,
         body: body.join(' ')
     };
@@ -86,5 +87,6 @@ function convertLevel(level) {
 
 module.exports = {
     parseHead,
-    parse
+    parse,
+    computeBaseExtras
 };

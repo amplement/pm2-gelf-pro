@@ -229,7 +229,7 @@ describe('room-event', () => {
 
     it('should handle correctly subscriber hangup who remove a pcs event log', () => {
         const fullLog =
-            'api:debug:event:room Subscriber hangup | between _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client a469f638-6779-41bb-8ede-949f56cce5b7 token 382f83b8-8f3a-4870-932c-0e1719934d27 profile videoLow | removing PCS | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
+            'api:debug:event:room Subscriber hangup | between _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client a469f638-6779-41bb-8ede-949f56cce5b7 token 382f83b8-8f3a-4870-932c-0e1719934d27 profileKey videoLow | removing PCS | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
@@ -241,7 +241,7 @@ describe('room-event', () => {
                 _user: 'f10bcd85-3c6d-46b0-9039-db4d42469f14',
                 _client: 'a469f638-6779-41bb-8ede-949f56cce5b7'
             },
-            profile: 'videoLow',
+            profileKey: 'videoLow',
             token: '382f83b8-8f3a-4870-932c-0e1719934d27',
             parser: 'room-event'
         });
@@ -249,13 +249,13 @@ describe('room-event', () => {
 
     it('should handle correctly subscriber hangup event log', () => {
         const fullLog =
-            'api:debug:event:room Subscriber hangup | between _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _client a469f638-6779-41bb-8ede-949f56cce5b7 profile videoLow | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
+            'api:debug:event:room Subscriber hangup | between _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _client a469f638-6779-41bb-8ede-949f56cce5b7 profileKey videoLow | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
             initiator: { _client: 'f65d2230-6fc7-41c5-8d99-22847f927af2' },
             target: { _client: 'a469f638-6779-41bb-8ede-949f56cce5b7' },
-            profile: 'videoLow',
+            profileKey: 'videoLow',
             parser: 'room-event'
         });
     });
@@ -279,12 +279,12 @@ describe('room-event', () => {
 
     it('should handle correctly publisher ready event log', () => {
         const fullLog =
-            'api:debug:event:room High publisher ready | between _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _user janus _client janus token 934c2242-e2e8-48a9-9ffc-84f49d4d096a profile videoHigh | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
+            'api:debug:event:room High publisher ready | between _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _user janus _client janus token 934c2242-e2e8-48a9-9ffc-84f49d4d096a profileKey videoHigh | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
             token: '934c2242-e2e8-48a9-9ffc-84f49d4d096a',
-            profile: 'videoHigh',
+            profileKey: 'videoHigh',
             initiator: {
                 _user: 'f10bcd85-3c6d-46b0-9039-db4d42469f14',
                 _client: 'f65d2230-6fc7-41c5-8d99-22847f927af2'
@@ -299,12 +299,12 @@ describe('room-event', () => {
 
     it('should handle correctly publisher ready message event log', () => {
         const fullLog =
-            'api:debug:event:room Publisher ready | between _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _user janus _client janus token 77c36dac-fe48-406c-a499-5c91aec7bd94 profile videoLow | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
+            'api:debug:event:room Publisher ready | between _user f10bcd85-3c6d-46b0-9039-db4d42469f14 _client f65d2230-6fc7-41c5-8d99-22847f927af2 and _user janus _client janus token 77c36dac-fe48-406c-a499-5c91aec7bd94 profileKey videoLow | _entity e815eae8-98ad-4dd7-b470-acbccd4db0a5';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
             token: '77c36dac-fe48-406c-a499-5c91aec7bd94',
-            profile: 'videoLow',
+            profileKey: 'videoLow',
             initiator: {
                 _user: 'f10bcd85-3c6d-46b0-9039-db4d42469f14',
                 _client: 'f65d2230-6fc7-41c5-8d99-22847f927af2'

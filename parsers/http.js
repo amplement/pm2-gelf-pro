@@ -37,7 +37,7 @@ function extractRequestGroup(url) {
     const group = {
         ...(queryParams ? { queryParams } : {}),
         admin: false,
-        path: baseUrl.replace(UUID_PATTERN, ':_id').replace(UUID_PATTERN, ':_subId')
+        basePath: baseUrl.replace(UUID_PATTERN, ':_id').replace(UUID_PATTERN, ':_subId')
     };
     const urlParts = baseUrl.trim().split('/');
 
@@ -137,10 +137,10 @@ function parser(log, head) {
     return {
         parser: 'http',
         ip,
-        cloudflareRay: cloudflareRay.replace('cfRay=', ''),
+        cfRay: cloudflareRay.replace('cfRay=', ''),
         country,
-        httpVerb: httpVerb.replace(':', ''),
-        url,
+        httpMethod: httpVerb.replace(':', ''),
+        path: url,
         responseCode,
         executionTime: parseFloat(executionTime.replace('rt=', '')),
         userAgent,
