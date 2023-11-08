@@ -38,7 +38,7 @@ describe('room parsers index', () => {
                 instanceId: '8',
                 serverType: '-',
                 profile: 'audioLow',
-                type: 'incoming',
+                peerType: 'incoming',
                 _entity: '1c8be699-c2e5-4180-8750-8b18ea19ac40',
                 initiator: { _user: 'janusServer', _client: 'a997f9f0e8ebbc33e8e4813d941ad95b' },
                 target: {

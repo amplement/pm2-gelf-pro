@@ -18,7 +18,7 @@ function parser(log, head) {
     parsedData.profile = getMatchSimpleValue(log, /(profile [a-zA-Z-]*)/);
     parsedData.serverType = getMatchSimpleValue(log, /(serverType [a-zA-Z-]*)/);
     parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/);
-    parsedData.type = getMatchSimpleValue(log, /(type [a-zA-Z-]*)/);
+    parsedData.peerType = getMatchSimpleValue(log, /(type [a-zA-Z-]*)/);
     parsedData.initiator = getMatchUserValues(log, 'between <{user}> <{client}>');
     parsedData.target = getMatchUserValues(log, 'and <{user}> <{client}>');
     return parsedData;
