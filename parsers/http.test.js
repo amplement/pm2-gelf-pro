@@ -68,7 +68,7 @@ describe('http log parser', () => {
                 admin: false,
                 entityType: 'users',
                 rest: 'me',
-                path: 'users/me'
+                basePath: 'users/me'
             });
             expect(
                 extractRequestGroup(
@@ -79,7 +79,7 @@ describe('http log parser', () => {
                 admin: true,
                 entityType: 'monitor',
                 rest: 'sockets/sparks/00000000-0000-0000-0000-000000000000',
-                path: 'admin/monitor/sockets/sparks/:_id'
+                basePath: 'admin/monitor/sockets/sparks/:_id'
             });
             expect(
                 extractRequestGroup(
@@ -92,7 +92,7 @@ describe('http log parser', () => {
                 _entity: '00000000-0000-0000-0000-000000000000',
                 subEntityType: 'push-notification',
                 rest: 'ping',
-                path: 'admin/users/:_id/push-notification/ping'
+                basePath: 'admin/users/:_id/push-notification/ping'
             });
             expect(
                 extractRequestGroup('/users/00000000-0000-0000-0000-000000000000')
@@ -101,7 +101,7 @@ describe('http log parser', () => {
                 admin: false,
                 entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000',
-                path: 'users/:_id'
+                basePath: 'users/:_id'
             });
             expect(
                 extractRequestGroup(
@@ -114,7 +114,7 @@ describe('http log parser', () => {
                 _entity: '00000000-0000-0000-0000-000000000000',
                 subEntityType: 'members',
                 _subEntity: '11111111-1111-1111-1111-111111111111',
-                path: 'v5/feeds/:_id/members/:_subId'
+                basePath: 'v5/feeds/:_id/members/:_subId'
             });
             expect(
                 extractRequestGroup(
@@ -126,7 +126,7 @@ describe('http log parser', () => {
                 entityType: 'users',
                 _entity: '00000000-0000-0000-0000-000000000000',
                 subEntityType: 'acknowledgements',
-                path: 'v5/users/:_id/acknowledgements'
+                basePath: 'v5/users/:_id/acknowledgements'
             });
         });
     });
@@ -167,20 +167,20 @@ describe('http log parser', () => {
                 parser: 'http',
                 ip: '89.101.10.145',
                 country: '-',
-                httpVerb: 'POST',
-                url: '/feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements',
+                httpMethod: 'POST',
+                path: '/feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements',
                 responseCode: '201',
                 executionTime: 0.035,
                 userAgent:
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33',
                 _client: 'e0aa11f3-bc60-4363-a15c-bf185435e2e9',
                 admin: false,
-                cloudflareRay: '75c029d39e85d357-CDG',
+                cfRay: '75c029d39e85d357-CDG',
                 version: 1,
                 entityType: 'feed',
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
                 subEntityType: 'acknowledgements',
-                path: 'feed/:_id/acknowledgements',
+                basePath: 'feed/:_id/acknowledgements',
                 context: {
                     _user: '2410a410-6ae7-4da5-b70e-08f951d268d9',
                     _company: '732cdb1a-23a1-4829-824f-02289cecdefd',
@@ -196,20 +196,20 @@ describe('http log parser', () => {
                 parser: 'http',
                 ip: '89.101.10.145',
                 country: '-',
-                httpVerb: 'POST',
-                url: '/feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements',
+                httpMethod: 'POST',
+                path: '/feed/0b02c35a-69ed-4019-94c0-43e556a64bc0/acknowledgements',
                 responseCode: '201',
                 executionTime: 0.035,
                 userAgent:
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33',
                 _client: 'e0aa11f3-bc60-4363-a15c-bf185435e2e9',
                 admin: false,
-                cloudflareRay: '75c029d39e85d357-CDG',
+                cfRay: '75c029d39e85d357-CDG',
                 version: 1,
                 entityType: 'feed',
                 _entity: '0b02c35a-69ed-4019-94c0-43e556a64bc0',
                 subEntityType: 'acknowledgements',
-                path: 'feed/:_id/acknowledgements'
+                basePath: 'feed/:_id/acknowledgements'
             });
         });
 
@@ -220,18 +220,18 @@ describe('http log parser', () => {
                 parser: 'http',
                 ip: '185.234.70.46',
                 country: 'FR',
-                httpVerb: 'GET',
-                url: '/rooms',
+                httpMethod: 'GET',
+                path: '/rooms',
                 responseCode: '200',
                 executionTime: 0.007,
                 userAgent:
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34',
                 _client: '3d728d32-83ed-4d4d-b309-77dae75d8779',
                 admin: false,
-                cloudflareRay: '-',
+                cfRay: '-',
                 version: 1,
                 entityType: 'rooms',
-                path: 'rooms',
+                basePath: 'rooms',
                 context: {}
             });
         });
@@ -243,8 +243,8 @@ describe('http log parser', () => {
                 parser: 'http',
                 ip: '10.59.198.68,192.54.145.139,245.233.239.9',
                 country: 'FR',
-                httpVerb: 'HEAD',
-                url: '/companies?_parent=639dd801-92b5-4e68-9915-f75000d293cc&subdomain=xdxd',
+                httpMethod: 'HEAD',
+                path: '/companies?_parent=639dd801-92b5-4e68-9915-f75000d293cc&subdomain=xdxd',
                 responseCode: '404',
                 executionTime: 0.007,
                 userAgent:
@@ -252,10 +252,10 @@ describe('http log parser', () => {
                 _client: '-',
                 admin: false,
                 queryParams: '_parent=639dd801-92b5-4e68-9915-f75000d293cc&subdomain=xdxd',
-                cloudflareRay: '775c4aa54a1dd3af-CDG',
+                cfRay: '775c4aa54a1dd3af-CDG',
                 version: 1,
                 entityType: 'companies',
-                path: 'companies',
+                basePath: 'companies',
                 context: {}
             });
         });
