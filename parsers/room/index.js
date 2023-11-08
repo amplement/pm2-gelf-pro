@@ -1,7 +1,7 @@
 const { parser: parserPcs, isParseable: isParseablePcs } = require('./pcs');
 const { parser: parserEvent, isParseable: isParseableEvent } = require('./event');
 const { parser: parseWss, isParseable: isParseableWss } = require('./wss');
-const { parser: parseAction, isParseable: isParseableAction } = require('./action');
+const { parser: parseAction, isParseable: isParseableAction } = require('./service');
 const { parser: parsePcsStats, isParseable: isParseablePcsStats } = require('./pcs-stats');
 const { parser: parseHttp, isParseable: isParseableHttp } = require('./http');
 

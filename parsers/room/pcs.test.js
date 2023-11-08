@@ -107,4 +107,4 @@ describe('room-pcs', () => {
     });
 });
 
-// 2022-09-19T09:12:31.298Z api:info:pcs:stats Unknown pcs, action hasn't been added | token 3d1c5779-193d-4788-9048-af3e38c631e5 action ICE_CANDIDATES_EMITTED
+// 2022-09-19T09:12:31.298Z api:info:pcs-stats:room Unknown pcs, action hasn't been added | token 3d1c5779-193d-4788-9048-af3e38c631e5 action ICE_CANDIDATES_EMITTED
