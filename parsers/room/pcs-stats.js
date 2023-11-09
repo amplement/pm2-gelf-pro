@@ -1,9 +1,11 @@
 const { getUuidValue } = require('../../utils');
 
 function isParseable(head) {
-    return head.indexOf(':pcs-stats:room') !== -1
-    // old naming
-    || head.indexOf(':pcs:stats') !== -1;
+    return (
+        head.indexOf(':pcs-stats:room') !== -1 ||
+        // old naming
+        head.indexOf(':pcs:stats') !== -1
+    );
 }
 
 function parser(log, head) {
