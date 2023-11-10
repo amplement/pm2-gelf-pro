@@ -15,7 +15,7 @@ function parser(log, head) {
     parsedData.status = getMatchSimpleValue(log, /(status [a-zA-Z-]*)/);
     parsedData.token = getUuidValue(log, 'token');
     parsedData._entity = getUuidValue(log, '_entity');
-    parsedData.profile = getMatchSimpleValue(log, /(profile [a-zA-Z-]*)/);
+    parsedData.profileKey = getMatchSimpleValue(log, /(profileKey [a-zA-Z-]*)/);
     parsedData.serverType = getMatchSimpleValue(log, /(serverType [a-zA-Z-]*)/);
     parsedData.instanceId = getMatchSimpleValue(log, /(instanceId [0-9]*)/);
     parsedData.peerType = getMatchSimpleValue(log, /(type [a-zA-Z-]*)/);

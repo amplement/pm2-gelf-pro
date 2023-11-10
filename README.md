@@ -4,8 +4,15 @@
 
 ### First installation
 
+#### production
 ```shell
 pm2 install @amplement/pm2-gelf-pro
+```
+
+#### development 
+Go to your local directory 
+```shell
+pm2 install .
 ```
 
 ### Update

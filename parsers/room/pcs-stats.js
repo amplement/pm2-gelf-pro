@@ -1,4 +1,4 @@
-const { getUuidValue } = require('../../utils');
+const { getUuidValue, getMatchSimpleValue } = require('../../utils');
 
 function isParseable(head) {
     return (
@@ -17,6 +17,7 @@ function parser(log, head) {
     };
     parsedData.token = getUuidValue(log, 'token');
     parsedData._entity = getUuidValue(log, '_entity');
+    parsedData.profileKey = getMatchSimpleValue(log, /(profileKey [a-zA-Z-]+)/);
 
     return parsedData;
 }

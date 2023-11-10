@@ -7,14 +7,14 @@ const logs = [
         'debug',
         'pcs-stats',
         'room',
-        'api:debug:pcs-stats:room PC connection state change to "connected" | profile audioLow token 066b2572-150f-4613-b385-15c325aca163 _entity 0ad15985-2ba4-4abe-81d9-5fc30f2fb4f4'
+        'api:debug:pcs-stats:room PC connection state change to "connected" | profileKey audioLow token 066b2572-150f-4613-b385-15c325aca163 _entity 0ad15985-2ba4-4abe-81d9-5fc30f2fb4f4'
     ],
     [
         'api',
         'info',
         'pcs',
         'room',
-        'api:info:pcs:room Create | status waiting token 16428175-272c-4d7b-b6b4-88bac21d273c instanceId 1 serverType - profile audioLow type peer in _entity 0ad15985-2ba4-4abe-81d9-5fc30f2fb4f4 between _user 8ae0db27-d08e-4eac-b6ec-a32f9378f4e1 _client 834a089b-e911-4820-b1a9-9ac0838f6e2a and _user 279ef0f0-45da-45cc-a100-84288c124f98 _client 528b50d0-3518-408a-8afd-9a405995cd49'
+        'api:info:pcs:room Create | status waiting token 16428175-272c-4d7b-b6b4-88bac21d273c instanceId 1 serverType - profileKey audioLow type peer in _entity 0ad15985-2ba4-4abe-81d9-5fc30f2fb4f4 between _user 8ae0db27-d08e-4eac-b6ec-a32f9378f4e1 _client 834a089b-e911-4820-b1a9-9ac0838f6e2a and _user 279ef0f0-45da-45cc-a100-84288c124f98 _client 528b50d0-3518-408a-8afd-9a405995cd49'
     ],
     [
         'api',
