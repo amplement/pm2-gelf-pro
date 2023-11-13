@@ -8,18 +8,20 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: '578ae9c5-9875-471e-96f3-5f06c3e5534a',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: '-'
         });
     });
 
     it('should parse pcs stats ice connection stats change event correctly', () => {
         const fullLog =
-            'api:debug:pcs-stats:room ICE connection state change to "new" | token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 sinceCreation 541ms sincePrevious 541ms +541ms';
+            'api:debug:pcs-stats:room ICE connection state change to "new" | profileKey audio token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 sinceCreation 541ms sincePrevious 541ms +541ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: '7cc7f2d8-7a38-42a7-bac5-98433134b2ad',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: 'audio'
         });
     });
 
@@ -30,7 +32,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: 'ee65e403-0e76-41d7-8b4a-affd9ed9360b',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: '-'
         });
     });
 
@@ -41,7 +44,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: '7cc7f2d8-7a38-42a7-bac5-98433134b2ad',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: '-'
         });
     });
 
@@ -52,7 +56,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: 'f3d0a037-f053-4c1c-8c58-7aa06d599b4e',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: '-'
         });
     });
 
@@ -63,7 +68,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: '7cc7f2d8-7a38-42a7-bac5-98433134b2ad',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: '-'
         });
     });
 
@@ -73,7 +79,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: 'b6933e95-f25d-49a0-bd39-d07a9657863a',
-            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5'
+            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
+            profileKey: '-'
         });
     });
 
@@ -83,7 +90,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: 'a89bc5c2-d645-442b-bd49-9ffa8be702ad',
-            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5'
+            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
+            profileKey: '-'
         });
     });
 
@@ -94,7 +102,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: '833b09c3-1c27-4046-ac14-1f178ff6c9e7',
-            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9'
+            _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
+            profileKey: '-'
         });
     });
 
@@ -105,7 +114,8 @@ describe('pcs-stats', () => {
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
             token: '02010338-170f-40ee-814d-fdc41db86d53',
-            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5'
+            _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
+            profileKey: '-'
         });
     });
 
