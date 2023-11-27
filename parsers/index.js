@@ -2,6 +2,7 @@ const os = require('os');
 const { parser: httpParser, isParseable: isParseableHttp } = require('./http');
 const { parser: roomParser, isParseable: isParseableRoom } = require('./room');
 const { parser: wssParser, isParseable: isParseableWss } = require('./wss');
+const { parser: pushParser, isParseable: isParseablePush } = require('./push');
 
 function computeBaseExtras(log) {
     return {
@@ -60,6 +61,8 @@ function parseBody(head, log) {
         return roomParser(log, head);
     } else if (isParseableWss(head)) {
         return wssParser(log, head);
+    } else if (isParseablePush(head)) {
+        return pushParser(log, head);
     } else {
         return {
             parser: 'not-available'
