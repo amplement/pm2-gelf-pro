@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const os = require('os');
 const fs = require('fs');
 const pm2 = require('pm2');
 const pmx = require('pmx');
@@ -54,7 +55,9 @@ pm2.Client.launchBus((err, bus) => {
     if (err) return console.error('pm2-gelf-pro:', err);
 
     console.log(
-        `pm2-gelf-pro connector: Bus connected, sending logs to ${config.adapterOptions.host}:${config.adapterOptions.port} over ${config.adapterName}`
+        `pm2-gelf-pro connector: Bus connected, sending logs to ${config.adapterOptions.host}:${
+            config.adapterOptions.port
+        } over ${config.adapterName} from from host ${os.hostname()}`
     );
 
     function handleLog(log, isError = false) {
