@@ -17,6 +17,8 @@ function parser(log, head) {
     };
     parsedData.token = getUuidValue(log, 'token');
     parsedData._entity = getUuidValue(log, '_entity');
+    parsedData._user = getUuidValue(log, '_user');
+    parsedData._client = getUuidValue(log, '_client');
     parsedData.profileKey = getMatchSimpleValue(log, /(profileKey [a-zA-Z-]+)/);
 
     return parsedData;

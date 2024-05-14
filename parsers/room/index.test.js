@@ -71,6 +71,8 @@ describe('room parsers index', () => {
                 parser: 'room-pcs-stats',
                 token: '02010338-170f-40ee-814d-fdc41db86d53',
                 _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
+                _user: '-',
+                _client: '-',
                 profileKey: '-'
             });
         });
