@@ -73,7 +73,10 @@ describe('room parsers index', () => {
                 _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
                 _user: '-',
                 _client: '-',
-                profileKey: '-'
+                profileKey: '-',
+                pcType: '-',
+                pcState: '-',
+                iceState: '-',
             });
         });
 

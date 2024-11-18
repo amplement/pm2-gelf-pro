@@ -3,7 +3,7 @@ const { parser } = require('./pcs-stats');
 describe('pcs-stats', () => {
     it('should parse pcs stats create event correctly', () => {
         const fullLog =
-            'api:debug:pcs-stats:room created | token 578ae9c5-9875-471e-96f3-5f06c3e5534a _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 0ms sincePrevious -ms +1ms';
+            'api:debug:pcs-stats:room created | pcType publisher token 578ae9c5-9875-471e-96f3-5f06c3e5534a _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 0ms sincePrevious -ms +1ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
@@ -11,13 +11,16 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: 'publisher',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
 
     it('should parse pcs stats ice connection stats change event correctly', () => {
         const fullLog =
-            'api:debug:pcs-stats:room ICE connection state change to "new" | profileKey audio token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 541ms sincePrevious 541ms +541ms';
+            'api:debug:pcs-stats:room ICE connection state change to "new" | iceState new pcType pstn-publisher profileKey audio token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 541ms sincePrevious 541ms +541ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
@@ -25,13 +28,16 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
-            profileKey: 'audio'
+            profileKey: 'audio',
+            pcType: 'pstn-publisher',
+            pcState: '-',
+            iceState: 'new'
         });
     });
 
     it('should parse pcs stats PC connection stats change event correctly', () => {
         const fullLog =
-            'api:debug:pcs-stats:room PC connection state change to "connecting" | token ee65e403-0e76-41d7-8b4a-affd9ed9360b _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 732ms sincePrevious 1ms +1ms';
+            'api:debug:pcs-stats:room PC connection state change to "connecting" | pcState connecting pcType publisher token ee65e403-0e76-41d7-8b4a-affd9ed9360b _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 732ms sincePrevious 1ms +1ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
@@ -39,13 +45,16 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
-            profileKey: '-'
+            profileKey: '-',
+            pcType: 'publisher',
+            iceState: '-',
+            pcState: 'connecting'
         });
     });
 
     it('should parse pcs stats ICE candidate received event correctly', () => {
         const fullLog =
-            'api:debug:pcs-stats:room ICE candidate n°1 received "candidate:0 1 UDP 2122252543 192.168.68.108 59772 typ host" | token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 1028ms sincePrevious 130ms +127ms';
+            'api:debug:pcs-stats:room ICE candidate n°1 received "candidate:0 1 UDP 2122252543 192.168.68.108 59772 typ host" | pcType peer token 7cc7f2d8-7a38-42a7-bac5-98433134b2ad _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 1028ms sincePrevious 130ms +127ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
@@ -53,13 +62,16 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: 'peer',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
 
     it('should parse pcs stats ICE candidate emitted event correctly', () => {
         const fullLog =
-            'api:debug:pcs-stats:room ICE candidate n°3 received "candidate:0 1 UDP 2122252543 192.168.68.108 52159 typ host" | token f3d0a037-f053-4c1c-8c58-7aa06d599b4e _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 2156ms sincePrevious 2156ms +12ms';
+            'api:debug:pcs-stats:room ICE candidate n°3 received "candidate:0 1 UDP 2122252543 192.168.68.108 52159 typ host" | pcType peer token f3d0a037-f053-4c1c-8c58-7aa06d599b4e _entity 56c2cd0a-7d9e-4b76-85be-944ae3b32ee9 _user d6e25ce8-bbe3-4494-8e9d-711cf1ad819e _client 2a729f00-8185-4832-87e6-ddfe4449ee84 sinceCreation 2156ms sincePrevious 2156ms +12ms';
         const { body: log, head } = prepareLog(fullLog);
         expect(parser(log, head)).toStrictEqual({
             parser: 'room-pcs-stats',
@@ -67,6 +79,9 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: 'peer',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
@@ -81,6 +96,9 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: '-',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
@@ -94,6 +112,9 @@ describe('pcs-stats', () => {
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: '-',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
@@ -107,6 +128,9 @@ describe('pcs-stats', () => {
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: '-',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
@@ -121,6 +145,9 @@ describe('pcs-stats', () => {
             _entity: '56c2cd0a-7d9e-4b76-85be-944ae3b32ee9',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: '-',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
@@ -135,6 +162,9 @@ describe('pcs-stats', () => {
             _entity: 'e815eae8-98ad-4dd7-b470-acbccd4db0a5',
             _user: 'd6e25ce8-bbe3-4494-8e9d-711cf1ad819e',
             _client: '2a729f00-8185-4832-87e6-ddfe4449ee84',
+            pcType: '-',
+            iceState: '-',
+            pcState: '-',
             profileKey: '-'
         });
     });
