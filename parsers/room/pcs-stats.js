@@ -33,6 +33,7 @@ function parser(log, head) {
     }
 
     parsedData.token = getUuidValue(log, 'token');
+    parsedData.initialToken = getUuidValue(log, 'initialToken');
     parsedData._entity = getUuidValue(log, '_entity');
     parsedData._user = getUuidValue(log, '_user');
     parsedData._client = getUuidValue(log, '_client');
