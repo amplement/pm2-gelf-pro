@@ -59,3 +59,9 @@ Gelf pro default config is :
     }
 }
 ```
+
+### Run
+Run for tests
+```json
+    pm2-gelf-pro % gelf_fields='{"X-OVH-TOKEN":"my-value"}' gelf_adapterOptions_certpath=ldp-is-09371.pem node send.js
+```
