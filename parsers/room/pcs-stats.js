@@ -40,8 +40,9 @@ function parser(log, head) {
     parsedData.country = getMatchSimpleValue(log, /(country [A-Z-]+)/);
     parsedData.pcType = getMatchSimpleValue(log, /(pcType [a-zA-Z-]+)/);
     parsedData.pcState = getMatchSimpleValue(log, /(pcState [a-zA-Z-]+)/);
-    parsedData.retriedTimes_int = Number(getMatchSimpleValue(log, /(retriedTimes [0-9]+)/));
+    parsedData.retriedTimes_int = getMatchSimpleValue(log, /(retriedTimes [0-9]+)/);
     parsedData.iceState = getMatchSimpleValue(log, /(iceState [a-zA-Z-]+)/);
+    parsedData.iceCandTyp = getMatchSimpleValue(log, /(typ [a-z]+)/);
     parsedData.profileKey = getMatchSimpleValue(log, /(profileKey [a-zA-Z-]+)/);
 
     return parsedData;
