@@ -3,6 +3,7 @@ const { parser: httpParser, isParseable: isParseableHttp } = require('./http');
 const { parser: roomParser, isParseable: isParseableRoom } = require('./room');
 const { parser: wssParser, isParseable: isParseableWss } = require('./wss');
 const { parser: pushParser, isParseable: isParseablePush } = require('./push');
+const { removeDate } = require('../utils');
 
 function computeBaseExtras(log) {
     return {
@@ -15,14 +16,16 @@ function parse(log, message, isError = false) {
     let additionalData = {};
     let logLevel = 'info';
     try {
-        const { head, origin, level, type, entity, body } = parseHead(message);
+        const timestamp = retrieveOriginDate(message);
+        const { head, origin, level, type, entity, body } = parseHead(removeDate(message));
         logLevel = level;
         additionalData = {
             origin,
             type,
             entity,
             ...computeBaseExtras(log),
-            ...parseBody(head, body)
+            ...parseBody(head, body),
+            timestamp
         };
     } catch (e) {
         additionalData.processingError = true;
@@ -32,7 +35,7 @@ function parse(log, message, isError = false) {
 }
 
 function parseHead(line) {
-    const [head, ...body] = line.trim().split(' ');
+    const [head, ...body] = line.toString().trim().split(' ');
     const [origin, level, type, entity, ...rest] = head.split(':');
     return {
         head,
@@ -43,6 +46,21 @@ function parseHead(line) {
         headRest: rest,
         body: body.join(' ')
     };
+}
+
+// capture application date logged instead of gelf generated date
+// and return an unix epoch milliseconds timestamp with x3 decimals (should return undefined if no date has been found)
+// ### line possible values :
+// 2025-05-20T16:45:32.629Z api:info:sip-lb:EU_FRA_SBG:2 .....
+// api:info:sip-lb:EU_FRA_SBG:2 .....
+function retrieveOriginDate(line) {
+    try {
+        const [appDate] = line.toString().trim().split(' ');
+        const d = new Date(appDate);
+        return isNaN(d) ? undefined : parseFloat((d.getTime() / 1000).toFixed(3));
+    } catch(e){
+        return;
+    }
 }
 
 /**
@@ -91,5 +109,6 @@ function convertLevel(level) {
 module.exports = {
     parseHead,
     parse,
-    computeBaseExtras
+    computeBaseExtras,
+    retrieveOriginDate
 };
