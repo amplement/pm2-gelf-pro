@@ -58,9 +58,7 @@ function retrieveOriginDate(line) {
         const [appDate] = line.toString().trim().split(' ');
         const d = new Date(appDate);
         return isNaN(d) ? undefined : parseFloat((d.getTime() / 1000).toFixed(3));
-    } catch(e){
-        return;
-    }
+    } catch (e) {}
 }
 
 /**

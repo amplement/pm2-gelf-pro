@@ -4,7 +4,7 @@ const {
     splitMultipleLogs,
     extractContext,
     getMatchSimpleValue,
-    getMatchUserValues,
+    getMatchUserValues
 } = require('./index');
 
 describe('utils', () => {

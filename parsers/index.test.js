@@ -44,8 +44,7 @@ describe('parsers index', () => {
             expect(parser.retrieveOriginDate(log)).toBe(1663316277.608);
         });
         it('should return undefined if nothing found', () => {
-            const log =
-                'api:trace:mbc:room-sfu ⭣ roomSfu.onRegister.janus-room-proxy (subsc)';
+            const log = 'api:trace:mbc:room-sfu ⭣ roomSfu.onRegister.janus-room-proxy (subsc)';
             expect(parser.retrieveOriginDate(log)).toBeUndefined();
         });
         test.each([[null], [''], [{}]])(
@@ -77,7 +76,8 @@ describe('parsers index', () => {
                 logLevel: 'info',
                 additionalData: {
                     processingError: true,
-                    errorDetails: "Cannot read properties of null (reading 'process')"                }
+                    errorDetails: "Cannot read properties of null (reading 'process')"
+                }
             });
             expect(parser.parse(1, '')).toStrictEqual({
                 logLevel: 'info',
