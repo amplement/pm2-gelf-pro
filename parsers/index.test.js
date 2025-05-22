@@ -37,6 +37,23 @@ const base = {
     }
 };
 describe('parsers index', () => {
+    describe('retrieveOriginDate', () => {
+        it('should extract the date at the beginning of the log', () => {
+            const log =
+                '2022-09-16T08:17:57.608Z api:trace:mbc:room-sfu ⭣ roomSfu.onRegister.janus-room-proxy (subsc)';
+            expect(parser.retrieveOriginDate(log)).toBe(1663316277.608);
+        });
+        it('should return undefined if nothing found', () => {
+            const log = 'api:trace:mbc:room-sfu ⭣ roomSfu.onRegister.janus-room-proxy (subsc)';
+            expect(parser.retrieveOriginDate(log)).toBeUndefined();
+        });
+        test.each([[null], [''], [{}]])(
+            'should return undefined if value %i is provided',
+            (value) => {
+                expect(parser.retrieveOriginDate(value)).toBeUndefined();
+            }
+        );
+    });
     describe('parse', () => {
         it.each(logs)(
             'should retrieve general properties for all kind of logs',
@@ -52,14 +69,14 @@ describe('parsers index', () => {
                 logLevel: 'info',
                 additionalData: {
                     processingError: true,
-                    errorDetails: "Cannot read properties of undefined (reading 'trim')"
+                    errorDetails: "Cannot read properties of undefined (reading 'toString')"
                 }
             });
             expect(parser.parse(null, false)).toStrictEqual({
                 logLevel: 'info',
                 additionalData: {
                     processingError: true,
-                    errorDetails: 'line.trim is not a function'
+                    errorDetails: "Cannot read properties of null (reading 'process')"
                 }
             });
             expect(parser.parse(1, '')).toStrictEqual({

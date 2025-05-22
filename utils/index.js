@@ -84,7 +84,7 @@ function getMatchUserValues(line, template, options = {}) {
 }
 
 function removeDate(line) {
-    return line.replace(/^([0-9-:TZ.]{24} )/, '');
+    return line.toString().replace(/^([0-9-:TZ.]{24} )/, '');
 }
 
 function removeValues(data, valueToRemove = '-') {

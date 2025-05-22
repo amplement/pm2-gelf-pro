@@ -5,7 +5,7 @@ const pm2 = require('pm2');
 const pmx = require('pmx');
 const gelf = require('gelf-pro');
 const { parse: parseLog } = require('./parsers');
-const { removeColorCharacters, removeDate, splitMultipleLogs } = require('./utils');
+const { removeColorCharacters, splitMultipleLogs } = require('./utils');
 
 const _env = pmx.initModule();
 const config = {
@@ -65,7 +65,7 @@ pm2.Client.launchBus((err, bus) => {
             const processStart = new Date();
             const cleanedData = removeColorCharacters(log.data);
             splitMultipleLogs(cleanedData).forEach((line) => {
-                const { logLevel, additionalData } = parseLog(log, removeDate(line), isError);
+                const { logLevel, additionalData } = parseLog(log, line, isError);
                 const processEnd = new Date();
                 gelf[logLevel](line, {
                     ...additionalData,
